@@ -4,8 +4,8 @@ const PEN = "#27459a";
 
 const STEPS = [
   "Put the pieces you love in your potli. Tap the little pouch on anything, or tick it in the lal khata.",
-  "Write us a chithi. One tap sends your list, sizes and prices to our WhatsApp.",
-  "We reply with colours, sizes and a time to try things on, or we pack it in tissue and send it to you.",
+  "Write us a chithi. One tap sends your list, with sizes, colours and prices, to our WhatsApp.",
+  "We reply with what's available, help you pick the right size and colour, and sort out how it reaches you.",
 ];
 
 function Stamp() {

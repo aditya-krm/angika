@@ -5,10 +5,10 @@
 export const site = {
   name: "Angika",
   /** Shown under the wordmark and in the browser tab. */
-  tagline: "Dresses, handmade art & Bengali kalka",
+  tagline: "Where Style Meets Art",
   bengaliTagline: "গল্পে বোনা, হাতে আঁকা",
   description:
-    "Angika is a boutique menu of hand-picked dresses, handcrafted art pieces and Bengali kalka (paisley) textiles — every price in rupees, every piece chosen with love.",
+    "Angika is a boutique of handpicked dresses, handcrafted art and Bengali kalka textiles. Every piece is chosen one by one and priced in rupees.",
 
   /**
    * WhatsApp number in international format, digits only (country code + number).
@@ -18,8 +18,8 @@ export const site = {
   whatsappNumber: "+916295351954",
 
   instagram: {
-    handle: "@angika.studio", // TODO: replace with the real handle
-    url: "https://www.instagram.com/",
+    handle: "@angikafashion", // TODO: replace with the real handle
+    url: "https://www.instagram.com/angikafashion/",
   },
 
   visit: {
@@ -34,11 +34,11 @@ export const site = {
   /** Printed along the measuring tape under the almirah. */
   tape: [
     "Pujo edit is here",
-    "Made-to-order in 7 – 10 days",
-    "Free fall & pico on every saree",
-    "Hand-painted, never printed",
-    "Pan-India shipping",
-    "One free alteration on your first fitting",
+    "Handpicked, piece by piece",
+    "Real measurements on every piece",
+    "Pick a colour, send a chithi",
+    "Every price in rupees",
+    "Where style meets art",
   ],
 } as const;
 

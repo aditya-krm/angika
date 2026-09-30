@@ -4,7 +4,7 @@ import { whatsappLink } from "@/lib/format";
 import { FoldedCloth } from "../art/fabric";
 import { GarmentArt } from "../art/garment-art";
 import { ObjectArt } from "../art/object-art";
-import { HandArrow, Kalka, Scribble } from "../brand";
+import { BrandFigure, HandArrow, Kalka, Scribble } from "../brand";
 import { WhatsAppIcon } from "../icons";
 import { Price } from "../price";
 import { GarmentOnHanger } from "./hanger";
@@ -54,7 +54,7 @@ function DoorFront({ side }: { side: "l" | "r" }) {
 
 function DoorBack({ side }: { side: "l" | "r" }) {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-[#6d1522] [backface-visibility:hidden] [transform:rotateY(180deg)]">
+    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-maroon-deep [backface-visibility:hidden] [transform:rotateY(180deg)]">
       <div className="absolute inset-[6%] rounded-[2px] bg-tant-2">
         {side === "l" ? (
           <div className="absolute inset-x-[14%] top-[10%] bottom-[22%] rounded-[50%] bg-[linear-gradient(135deg,#eef2f4,#b7c1c8_42%,#f6f8fa_58%,#a9b3ba)] shadow-inner" />
@@ -76,15 +76,18 @@ function Almirah() {
   return (
     <div className="relative mx-auto w-full max-w-[36rem] px-[13%] pb-6 pt-10">
       {/* crown */}
-      <svg viewBox="0 0 400 60" className="relative z-10 -mb-px block w-full" aria-hidden="true" focusable="false">
-        <path d="M6 60V40h14c30-20 90-30 180-38 90 8 150 18 180 38h14v20Z" fill="#8f1426" />
-        <path d="M22 48c34-18 98-28 178-34 80 6 144 16 178 34" stroke="#e8c56d" strokeOpacity=".75" fill="none" />
-        <path d="M200 12c-8 8-10 14-4 20 4 4 10 2 10-4 0-6-6-10-6-16Z" fill="#e8c56d" />
-        <rect x="0" y="52" width="400" height="8" fill="#6d1522" />
-      </svg>
+      <div className="relative z-10 -mb-px">
+        <svg viewBox="0 0 400 60" className="block w-full" aria-hidden="true" focusable="false">
+          <path d="M6 60V40h14c30-20 90-30 180-38 90 8 150 18 180 38h14v20Z" fill="#42141e" />
+          <path d="M22 48c34-18 98-28 178-34 80 6 144 16 178 34" stroke="#e8c56d" strokeOpacity=".75" fill="none" />
+          <rect x="0" y="52" width="400" height="8" fill="#2c0c14" />
+        </svg>
+        {/* the Angika lady, carved into the crown in gold */}
+        <BrandFigure className="absolute left-1/2 top-[8%] h-[62%] -translate-x-1/2 text-[#e8c56d]" />
+      </div>
 
       {/* body */}
-      <div className="relative rounded-b-[4px] bg-[#8f1426] p-[4.5%] shadow-[0_40px_70px_-40px_rgb(var(--shadow)/0.7)]">
+      <div className="relative rounded-b-[4px] bg-maroon p-[4.5%] shadow-[0_40px_70px_-40px_rgb(var(--shadow)/0.7)]">
         <div className="absolute inset-0 rounded-b-[4px] bg-[linear-gradient(90deg,rgb(0_0_0/0.2),transparent_12%,transparent_88%,rgb(0_0_0/0.2))]" />
         <div className="relative [perspective:1600px]">
           {/* upper cupboard */}
@@ -185,8 +188,8 @@ function Almirah() {
       </div>
       {/* feet */}
       <div className="flex justify-between px-[6%]" aria-hidden="true">
-        <span className="h-4 w-8 rounded-b-md bg-[#6d1522]" />
-        <span className="h-4 w-8 rounded-b-md bg-[#6d1522]" />
+        <span className="h-4 w-8 rounded-b-md bg-maroon-deep" />
+        <span className="h-4 w-8 rounded-b-md bg-maroon-deep" />
       </div>
     </div>
   );
@@ -199,7 +202,7 @@ export function Hero() {
         <div className="relative z-10 max-w-[38rem]">
           <p className="rise label flex items-center gap-3 text-sindoor">
             <span className="h-px w-10 bg-sindoor" />
-            Angika · boutique &amp; atelier
+            Angika · where style meets art
           </p>
 
           <h1 className="rise mt-6 font-display text-[clamp(3.1rem,7.2vw,6.6rem)] font-normal leading-[0.94] tracking-[-0.02em] text-kajal [animation-delay:80ms]">
@@ -218,8 +221,8 @@ export function Hero() {
 
           <p className="rise mt-7 max-w-[31rem] text-[1.05rem] leading-[1.75] text-kajal-soft [animation-delay:200ms]">
             Every Bengali home has one: the tall almirah where the good sarees live, folded with neem leaves and
-            stories. This is ours. A rail of dresses, shelves of handmade things and a trunk full of kalka, each with
-            its price tag in rupees. There&rsquo;s no checkout here; just tell us what you love.
+            stories. This is ours: a rail of dresses, shelves of handmade things and a trunk full of kalka, every piece
+            handpicked and tagged in rupees. There&rsquo;s no checkout here; just tell us what you love.
           </p>
 
           <div className="rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:260ms]">

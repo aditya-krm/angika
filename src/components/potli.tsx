@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { optionsOf } from "@/data/catalog";
 import { site } from "@/data/site";
 import { chithiMessage, cx, formatINR, whatsappLink } from "@/lib/format";
+import { BrandFigure } from "./brand";
 import { CloseIcon } from "./icons";
 import { useShop } from "./shop-provider";
 
@@ -174,18 +176,36 @@ export function Chithi() {
                     >
                       {p.name}
                     </button>
-                    {p.sizes && p.sizes.length > 1 && (
+                    {(optionsOf(p)?.length ?? 0) > 1 && (
                       <select
-                        aria-label={`${p.optionLabel ?? "Size"} for ${p.name}`}
-                        value={choices[p.id] ?? ""}
-                        onChange={(e) => setChoice(p.id, e.target.value || undefined)}
+                        aria-label={`${p.sizeChart ? "Size" : (p.optionLabel ?? "Size")} for ${p.name}`}
+                        value={choices[p.id]?.option ?? ""}
+                        onChange={(e) => setChoice(p.id, { option: e.target.value || undefined })}
                         className="ml-1.5 rounded-sm border border-dashed bg-transparent px-1 font-hand text-[0.92rem]"
                         style={{ color: PEN, borderColor: `${PEN}66` }}
                       >
-                        <option value="">{(p.optionLabel ?? "size").toLowerCase()}?</option>
-                        {p.sizes.map((s) => (
-                          <option key={s} value={s}>
-                            {s}
+                        <option value="">{(p.sizeChart ? "size" : (p.optionLabel ?? "size")).toLowerCase()}?</option>
+                        {optionsOf(p)!.map((s) => {
+                          const row = p.sizeChart?.find((r) => r.size === s);
+                          return (
+                            <option key={s} value={s}>
+                              {row?.bust ? `${s} · bust ${row.bust}″` : s}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    )}
+                    {p.colours && p.colours.length > 1 && (
+                      <select
+                        aria-label={`Colour for ${p.name}`}
+                        value={choices[p.id]?.colour ?? p.colours[0].name}
+                        onChange={(e) => setChoice(p.id, { colour: e.target.value })}
+                        className="ml-1.5 rounded-sm border border-dashed bg-transparent px-1 font-hand text-[0.92rem]"
+                        style={{ color: PEN, borderColor: `${PEN}66` }}
+                      >
+                        {p.colours.map((c) => (
+                          <option key={c.name} value={c.name}>
+                            {c.name}
                           </option>
                         ))}
                       </select>
@@ -236,8 +256,8 @@ export function Chithi() {
               rel="noopener noreferrer"
               className="group mt-8 flex items-center gap-4 rounded-full bg-[#c21f32] py-2.5 pl-2.5 pr-6 font-medium text-white shadow-[0_12px_24px_-12px_rgb(194_31_50/0.8)] transition-transform hover:-translate-y-0.5"
             >
-              <span className="grid h-11 w-11 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#e2485a,#8f1426)] font-wordmark text-xl italic shadow-[inset_0_-3px_6px_rgb(0_0_0/0.35)] transition-transform group-hover:rotate-12">
-                A
+              <span className="grid h-11 w-11 place-items-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#7a2a38,#42141e)] text-[#e1d6c3] shadow-[inset_0_-3px_6px_rgb(0_0_0/0.35)] transition-transform group-hover:rotate-12">
+                <BrandFigure className="h-7" />
               </span>
               Seal it &amp; send on WhatsApp
             </a>

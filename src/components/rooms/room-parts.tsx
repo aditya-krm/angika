@@ -163,3 +163,53 @@ export function PotliToggle({
     </button>
   );
 }
+
+/** Little colour dots. Picking one changes the piece everywhere: rail, trial room and chithi. */
+export function ColourSwatches({
+  product,
+  size = "sm",
+  showName = true,
+  className,
+}: {
+  product: Product;
+  size?: "sm" | "md";
+  showName?: boolean;
+  className?: string;
+}) {
+  const { choices, setChoice } = useShop();
+  if (!product.colours || product.colours.length < 2) return null;
+  const current = choices[product.id]?.colour ?? product.colours[0].name;
+  const dot = size === "md" ? "h-8 w-8" : showName ? "h-5 w-5" : "h-4 w-4";
+  return (
+    <div
+      role="radiogroup"
+      aria-label={`Colours of ${product.name}`}
+      className={cx("flex items-center gap-2", className)}
+    >
+      {product.colours.map((c) => {
+        const on = c.name === current;
+        return (
+          <button
+            key={c.name}
+            type="button"
+            role="radio"
+            aria-checked={on}
+            aria-label={c.name}
+            title={c.name}
+            onClick={(e) => {
+              e.stopPropagation();
+              setChoice(product.id, { colour: c.name });
+            }}
+            className={cx(
+              "rounded-full shadow-[inset_0_0_0_1px_rgb(0_0_0/0.12)] transition-transform hover:scale-110",
+              dot,
+              on ? "ring-2 ring-kajal ring-offset-2 ring-offset-tant" : "",
+            )}
+            style={{ background: c.hex }}
+          />
+        );
+      })}
+      {showName && size === "sm" && <span className="font-hand text-[0.92rem] text-pen">{current}</span>}
+    </div>
+  );
+}

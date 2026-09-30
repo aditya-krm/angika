@@ -7,12 +7,15 @@ import { productById, type Product } from "@/data/catalog";
  * The visitor's potli (a little drawstring pouch) of saved pieces, plus which piece is
  * open in the trial room. Everything is kept on the visitor's own device.
  */
+/** What the visitor picked for a piece: a size (or scent…) and a colour. */
+export type Choice = { option?: string; colour?: string };
+
 type Shop = {
   potli: Product[];
-  choices: Record<string, string>;
+  choices: Record<string, Choice>;
   inPotli: (id: string) => boolean;
-  togglePotli: (id: string, choice?: string) => void;
-  setChoice: (id: string, choice: string | undefined) => void;
+  togglePotli: (id: string) => void;
+  setChoice: (id: string, patch: Choice) => void;
   emptyPotli: () => void;
   bump: number;
   activeProduct: Product | null;
@@ -25,14 +28,21 @@ type Shop = {
 const ShopContext = createContext<Shop | null>(null);
 const KEY = "angika:potli";
 
-type Saved = { ids: string[]; choices: Record<string, string> };
+type Saved = { ids: string[]; choices: Record<string, Choice> };
 
 function read(): Saved {
   try {
     const raw = window.localStorage.getItem(KEY);
     const parsed = raw ? (JSON.parse(raw) as Partial<Saved>) : {};
     const ids = Array.isArray(parsed.ids) ? parsed.ids.filter((id) => typeof id === "string" && id in productById) : [];
-    const choices = parsed.choices && typeof parsed.choices === "object" ? parsed.choices : {};
+    const choices: Record<string, Choice> = {};
+    if (parsed.choices && typeof parsed.choices === "object") {
+      for (const [id, value] of Object.entries(parsed.choices as Record<string, unknown>)) {
+        // Earlier versions saved just the size as a string.
+        if (typeof value === "string") choices[id] = { option: value };
+        else if (value && typeof value === "object") choices[id] = value as Choice;
+      }
+    }
     return { ids, choices };
   } catch {
     return { ids: [], choices: {} };
@@ -82,12 +92,11 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const togglePotli = useCallback(
-    (id: string, choice?: string) => {
+    (id: string) => {
       const adding = !savedRef.current.ids.includes(id);
-      update((s) => {
-        if (s.ids.includes(id)) return { ...s, ids: s.ids.filter((x) => x !== id) };
-        return { ids: [...s.ids, id], choices: choice ? { ...s.choices, [id]: choice } : s.choices };
-      });
+      update((s) =>
+        s.ids.includes(id) ? { ...s, ids: s.ids.filter((x) => x !== id) } : { ...s, ids: [...s.ids, id] },
+      );
       // bump is read by the potli button to play its little hop
       if (adding) setBump((n) => n + 1);
     },
@@ -95,13 +104,8 @@ export function ShopProvider({ children }: { children: React.ReactNode }) {
   );
 
   const setChoice = useCallback(
-    (id: string, choice: string | undefined) =>
-      update((s) => {
-        const choices = { ...s.choices };
-        if (choice) choices[id] = choice;
-        else delete choices[id];
-        return { ...s, choices };
-      }),
+    (id: string, patch: Choice) =>
+      update((s) => ({ ...s, choices: { ...s.choices, [id]: { ...s.choices[id], ...patch } } })),
     [update],
   );
 

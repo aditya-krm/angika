@@ -26,6 +26,21 @@ export type ProductType =
 
 export type Tag = "bestseller" | "new" | "made-to-order" | "limited" | "pujo" | "handpainted";
 
+/** One colour a piece comes in. The first colour in the list is the one in `photo`. */
+export type Colour = {
+  name: string;
+  /** Swatch colour. */
+  hex: string;
+  /** Photo of this colour. Without one, the site draws the piece in `palette`. */
+  photo?: string;
+  photoAlt?: string;
+  /** Colours for the drawing: base, motif, light. Defaults to the product's palette. */
+  palette?: [string, string, string];
+};
+
+/** A row of a size chart. Every measurement is in inches, taken flat and doubled where needed. */
+export type SizeRow = { size: string; bust?: number; waist?: number; hip?: number; length?: number };
+
 export type Collection = {
   id: CollectionId;
   /** The room of the almirah this collection lives in. */
@@ -52,9 +67,16 @@ export type Product = {
   /** A short handwritten note from the studio, shown on the tag. */
   note?: string;
   details: { label: string; value: string }[];
+  /** Simple options that aren't garment sizes (a candle's scent, a bangle size). */
   sizes?: string[];
-  /** Heading for `sizes` when they aren't sizes (e.g. "Scent"). */
+  /** Heading for `sizes` (e.g. "Scent"). */
   optionLabel?: string;
+  /** Garment size chart in inches. Its sizes become the options to pick from. */
+  sizeChart?: SizeRow[];
+  /** Measurements for free-size pieces: a saree's length, a dupatta's width… */
+  measurements?: { label: string; value: string }[];
+  /** Colours this piece comes in. Leave out for one-colour pieces. */
+  colours?: Colour[];
   tags: Tag[];
   /** Units left; 3 or fewer shows an "only n left" note. */
   stock?: number;
@@ -127,7 +149,30 @@ export const tagLabels: Record<Tag, string> = {
 
 const U = (id: string) => `https://images.unsplash.com/photo-${id}`;
 
-const APPAREL_SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+/* Size charts (inches). These are typical Indian womenswear sizes: replace them with the
+   supplier's chart for each piece when you have it. */
+const BODY: [string, number, number, number][] = [
+  ["XS", 32, 28, 36],
+  ["S", 34, 30, 38],
+  ["M", 36, 32, 40],
+  ["L", 38, 34, 42],
+  ["XL", 40, 36, 44],
+  ["XXL", 42, 38, 46],
+];
+/** Kurtas, tunics and straight dresses: bust, waist, hip and length. */
+const fitted = (length: number): SizeRow[] =>
+  BODY.map(([size, bust, waist, hip]) => ({ size, bust, waist, hip, length }));
+/** Flared dresses and anarkalis: bust, waist and length (the skirt is free). */
+const flared = (length: number): SizeRow[] => BODY.map(([size, bust, waist]) => ({ size, bust, waist, length }));
+/** Lehengas: blouse bust, skirt waist and skirt length. */
+const lehenga = (length: number): SizeRow[] =>
+  BODY.slice(1, 5).map(([size, bust, waist]) => ({ size, bust, waist, length }));
+
+const SAREE_MEASURE = [
+  { label: "Saree length", value: "5.5 m" },
+  { label: "Width", value: "1.15 m (45″)" },
+  { label: "Blouse piece", value: "0.8 m, unstitched" },
+];
 
 export const products: Product[] = [
   /* ───────────────────────── The Twirl Room ───────────────────────── */
@@ -149,7 +194,12 @@ export const products: Product[] = [
       { label: "Fit", value: "Relaxed, calf length" },
       { label: "Care", value: "Gentle hand wash" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(44),
+    colours: [
+      { name: "Dahi white", hex: "#F4F1EC" },
+      { name: "Neel", hex: "#8FA7D2", palette: ["#9DB4D8", "#F4F1EC", "#EEF2FB"] },
+      { name: "Gulabi", hex: "#E7C6D2", palette: ["#E7C6D2", "#8FA3D6", "#FBEFF3"] },
+    ],
     tags: ["bestseller"],
     photo: U("1745313452052-0e4e341f326c"),
     photoAlt: "Woman in a white floral kurta and pyjama set",
@@ -173,7 +223,11 @@ export const products: Product[] = [
       { label: "Fit", value: "Straight, knee length" },
       { label: "Care", value: "Machine wash cold" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(42),
+    colours: [
+      { name: "Gulabi", hex: "#F6C6D4" },
+      { name: "Pista", hex: "#BFD8B2", palette: ["#BFD8B2", "#5E8F5A", "#F1F7EE"] },
+    ],
     tags: ["new"],
     photo: U("1741847639057-b51a25d42892"),
     photoAlt: "Woman in a pink floral kurta and pants",
@@ -188,8 +242,7 @@ export const products: Product[] = [
     type: "dress",
     price: 2150,
     blurb: "Three tiers of marigold yellow and a hand-embroidered yoke.",
-    story:
-      "Egg-yolk yellow, three swishy tiers and a neckline embroidered in thread by our karigars. Built for twirling — we checked.",
+    story: "Egg-yolk yellow, three swishy tiers and a neckline embroidered in thread. Built for twirling — we checked.",
     note: "yes, it twirls. we checked.",
     details: [
       { label: "Fabric", value: "Cotton voile, lined" },
@@ -197,7 +250,11 @@ export const products: Product[] = [
       { label: "Length", value: "Midi" },
       { label: "Care", value: "Hand wash, dry in shade" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: flared(46),
+    colours: [
+      { name: "Marigold", hex: "#F6D46B" },
+      { name: "Monsoon sky", hex: "#A9C7E8", palette: ["#A9C7E8", "#4F79B5", "#EEF4FB"] },
+    ],
     tags: ["new", "bestseller"],
     photo: U("1760287363878-1a09af715b80"),
     photoAlt: "A yellow tiered dress with an embroidered neckline",
@@ -222,7 +279,11 @@ export const products: Product[] = [
       { label: "Fit", value: "Relaxed" },
       { label: "Care", value: "Dry clean first wash" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(26),
+    colours: [
+      { name: "Blush", hex: "#F7C9D3" },
+      { name: "Lilac", hex: "#C9B6E4", palette: ["#C9B6E4", "#7B5BA6", "#F4EFFA"] },
+    ],
     tags: ["bestseller"],
     stock: 3,
     photo: U("1762777777819-4d9aa5529368"),
@@ -246,7 +307,11 @@ export const products: Product[] = [
       { label: "Length", value: "Below knee" },
       { label: "Care", value: "Wash separately, colours may bleed" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(44),
+    colours: [
+      { name: "Indigo", hex: "#5B74B8" },
+      { name: "Kajal black", hex: "#2B2A30", palette: ["#2B2A30", "#8E8A99", "#EDECEF"] },
+    ],
     tags: [],
     photo: U("1760287363750-1c888c75578f"),
     photoAlt: "Mannequin wearing a blue button-up dress",
@@ -269,7 +334,7 @@ export const products: Product[] = [
       { label: "Fit", value: "Straight" },
       { label: "Care", value: "Hand wash cold" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(36),
     tags: ["new"],
     photo: U("1760287363699-a08d553fb8a9"),
     photoAlt: "Mannequin in a purple patterned tunic and striped pants",
@@ -293,7 +358,11 @@ export const products: Product[] = [
       { label: "Fit", value: "Straight, calf length" },
       { label: "Care", value: "Machine wash cold" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(46),
+    colours: [
+      { name: "Navy", hex: "#27366B" },
+      { name: "Maroon", hex: "#6E1A2E", palette: ["#6E1A2E", "#E9C9A6", "#F7ECE6"] },
+    ],
     tags: [],
     photo: U("1766994063823-ed214f883548"),
     photoAlt: "Woman in a floral navy blue kurta and pants",
@@ -316,7 +385,7 @@ export const products: Product[] = [
       { label: "Fit", value: "A-line" },
       { label: "Care", value: "Machine wash cold" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: fitted(40),
     tags: [],
     photo: U("1768651925876-637f68cd64f6"),
     photoAlt: "Woman in a blue floral print tunic and pants",
@@ -339,7 +408,7 @@ export const products: Product[] = [
       { label: "Length", value: "Ankle" },
       { label: "Care", value: "Dry clean recommended" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: flared(52),
     tags: [],
     photo: U("1610048869310-d889ff25c374"),
     photoAlt: "Woman in a green floral dress beside a wooden door",
@@ -361,9 +430,13 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Cotton-silk" },
       { label: "Work", value: "Resham thread embroidery" },
-      { label: "Size", value: "2.25 m × 0.9 m" },
       { label: "Care", value: "Dry clean only" },
     ],
+    colours: [
+      { name: "Smoke grey", hex: "#9A9A9E" },
+      { name: "Ivory", hex: "#EFE8DA", palette: ["#EFE8DA", "#2F2A2E", "#FBF8F2"] },
+    ],
+    measurements: [{ label: "Length × width", value: "2.25 m × 0.9 m" }],
     tags: [],
     photo: U("1773439878281-5aa23c34dcaa"),
     photoAlt: "Woman in a grey outfit with a black embroidered dupatta",
@@ -384,10 +457,10 @@ export const products: Product[] = [
     note: "Ashtami evening, sorted",
     details: [
       { label: "Fabric", value: "Silk-cotton" },
-      { label: "Length", value: "5.5 m + 0.8 m blouse piece" },
       { label: "Finish", value: "Fall & pico done" },
       { label: "Care", value: "Dry clean only" },
     ],
+    measurements: SAREE_MEASURE,
     tags: ["pujo", "bestseller"],
     photo: U("1610030469983-98e550d6193c"),
     photoAlt: "Woman in a red and brown sari",
@@ -408,10 +481,14 @@ export const products: Product[] = [
     note: "only 2 left, sorry!",
     details: [
       { label: "Fabric", value: "Art silk, zari border" },
-      { label: "Length", value: "5.5 m + 0.8 m blouse piece" },
       { label: "Finish", value: "Fall & pico done" },
       { label: "Care", value: "Dry clean only" },
     ],
+    colours: [
+      { name: "Parrot green", hex: "#3E8E5A" },
+      { name: "Rani pink", hex: "#C2185B", palette: ["#C2185B", "#D4AF37", "#F8E1EC"] },
+    ],
+    measurements: SAREE_MEASURE,
     tags: ["pujo"],
     stock: 2,
     photo: U("1679006831648-7c9ea12e5807"),
@@ -431,10 +508,14 @@ export const products: Product[] = [
       "A jamun-purple saree with golden motifs swirling like fresh jalebis. Soft drape, light weight, and a pallu that photographs beautifully.",
     details: [
       { label: "Fabric", value: "Soft silk blend" },
-      { label: "Length", value: "5.5 m + 0.8 m blouse piece" },
       { label: "Finish", value: "Fall & pico done" },
       { label: "Care", value: "Dry clean only" },
     ],
+    colours: [
+      { name: "Jamun", hex: "#5E2B5C" },
+      { name: "Bottle green", hex: "#1F5A45", palette: ["#1F5A45", "#D9A441", "#E3F0EA"] },
+    ],
+    measurements: SAREE_MEASURE,
     tags: [],
     photo: U("1641699862936-be9f49b1c38d"),
     photoAlt: "A woman in a purple and gold sari",
@@ -453,10 +534,10 @@ export const products: Product[] = [
       "A light chiffon saree dip-dyed from candy pink into orange. Ties easily, drapes beautifully, and weighs almost nothing in a suitcase.",
     details: [
       { label: "Fabric", value: "Georgette chiffon" },
-      { label: "Length", value: "5.5 m + 0.8 m blouse piece" },
       { label: "Finish", value: "Fall & pico done" },
       { label: "Care", value: "Dry clean only" },
     ],
+    measurements: SAREE_MEASURE,
     tags: ["new"],
     photo: U("1617627143750-d86bc21e42bb"),
     photoAlt: "A woman in a pink and orange sari with gold jewellery",
@@ -472,15 +553,17 @@ export const products: Product[] = [
     price: 12900,
     blurb: "Turmeric-yellow and maroon, dressed up for the haldi morning.",
     story:
-      "A flared yellow lehenga with maroon borders, gota work and a matching dupatta. Made to your measurements, so the twirl is exactly right.",
+      "A flared yellow lehenga with maroon borders, gota work and a matching dupatta. Cut with a generous flare, so the twirl is exactly right.",
     details: [
       { label: "Fabric", value: "Silk blend, gota patti work" },
       { label: "Set", value: "Lehenga + blouse + dupatta" },
-      { label: "Made to", value: "Your measurements" },
-      { label: "Ready in", value: "3 – 4 weeks" },
     ],
-    sizes: ["Custom fit"],
-    tags: ["made-to-order"],
+    sizeChart: lehenga(41),
+    colours: [
+      { name: "Haldi", hex: "#E9B949" },
+      { name: "Mehendi green", hex: "#6B8E23", palette: ["#6B8E23", "#7A1F2B", "#EEF4DC"] },
+    ],
+    tags: [],
     photo: U("1767955694884-d4bf352c23c2"),
     photoAlt: "Woman in ornate yellow and maroon traditional Indian attire",
     focus: "50% 20%",
@@ -497,15 +580,13 @@ export const products: Product[] = [
     blurb: "Deep maroon velvet with zardozi that feels like a royal secret.",
     story:
       "Maroon velvet worked with zardozi and sequins by hand. Heavy where it should be, light where you need to dance.",
-    note: "we stitch it to your size",
+    note: "the twirl on this one!",
     details: [
       { label: "Fabric", value: "Velvet, hand zardozi" },
       { label: "Set", value: "Lehenga + blouse + net dupatta" },
-      { label: "Made to", value: "Your measurements" },
-      { label: "Ready in", value: "4 – 5 weeks" },
     ],
-    sizes: ["Custom fit"],
-    tags: ["made-to-order", "limited"],
+    sizeChart: lehenga(41),
+    tags: ["limited"],
     photo: U("1756483488645-5973a1a92e33"),
     photoAlt: "Woman in an ornate maroon lehenga",
     focus: "50% 20%",
@@ -520,16 +601,14 @@ export const products: Product[] = [
     price: 18500,
     blurb: "Classic bridal red, a veil of net and a thousand tiny stitches.",
     story:
-      "Our bridal lehenga in traditional red with gold embroidery, a can-can for the perfect flare and a scalloped net veil. Two fittings included.",
-    note: "two fittings included",
+      "Our bridal lehenga in traditional red with gold embroidery, a can-can for the perfect flare and a scalloped net veil.",
+    note: "the one for the big day",
     details: [
       { label: "Fabric", value: "Raw silk, zari embroidery" },
       { label: "Set", value: "Lehenga + blouse + veil dupatta" },
-      { label: "Made to", value: "Your measurements, 2 fittings" },
-      { label: "Ready in", value: "5 – 6 weeks" },
     ],
-    sizes: ["Custom fit"],
-    tags: ["made-to-order"],
+    sizeChart: lehenga(42),
+    tags: [],
     photo: U("1759906760638-eeffcb471e53"),
     photoAlt: "A bride in a traditional red lehenga and veil",
     focus: "50% 20%",
@@ -784,7 +863,7 @@ export const products: Product[] = [
     price: 2400,
     blurb: "An original watercolour of flowers in a jug. One of one.",
     story:
-      "An original watercolour on cold-press paper, painted in the studio and signed on the back. Ships mounted, ready to frame.",
+      "An original watercolour on cold-press paper, signed by the artist on the back. Comes mounted, ready to frame.",
     note: "one of one, signed at the back",
     details: [
       { label: "Medium", value: "Watercolour on 300 gsm paper" },
@@ -851,15 +930,13 @@ export const products: Product[] = [
     price: 950,
     blurb: "A hand-embroidered hoop you can personalise with a name.",
     story:
-      "Botanical embroidery in a 6-inch wooden hoop. Want a name, a date or your pet's face? Tell us and we'll stitch it in.",
-    note: "we can stitch a name in",
+      "Botanical embroidery in a 6-inch wooden hoop, stitched by hand in soft cotton thread. Ready to hang as it is.",
+    note: "so pretty on a bare wall",
     details: [
       { label: "Material", value: "Cotton thread on linen" },
       { label: "Size", value: "6 inch hoop" },
-      { label: "Personalise", value: "Name or date, free" },
-      { label: "Ready in", value: "7 – 10 days" },
     ],
-    tags: ["made-to-order"],
+    tags: [],
     photo: U("1570073141869-2b9947394c95"),
     photoAlt: "An embroidery hoop",
     palette: ["#D8B98C", "#C2456B", "#F5EEE4"],
@@ -873,15 +950,14 @@ export const products: Product[] = [
     price: 650,
     blurb: "A canvas tote we hand-paint with whatever you like.",
     story:
-      "Heavy natural canvas, painted by hand with fabric colours that last through washes. Pick a kalka, a flower, or send us your own idea.",
-    note: "tell us what to paint",
+      "Heavy natural canvas, painted by hand with fabric colours that last through washes. Big enough for a laptop, a lunchbox and a novel.",
+    note: "every one is a little different",
     details: [
       { label: "Material", value: "12 oz cotton canvas" },
       { label: "Size", value: "38 × 42 cm, 10 cm gusset" },
       { label: "Paint", value: "Heat-set fabric colour" },
-      { label: "Ready in", value: "5 – 7 days" },
     ],
-    tags: ["handpainted", "made-to-order"],
+    tags: ["handpainted"],
     photo: U("1548863227-3af567fc3b27"),
     photoAlt: "A white canvas tote bag",
     palette: ["#EFE8DC", "#C2456B", "#6F8F72"],
@@ -966,9 +1042,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Handloom cotton tant" },
       { label: "Motif", value: "Woven kalka pallu" },
-      { label: "Length", value: "5.5 m + blouse piece" },
       { label: "Care", value: "Starch & dry clean" },
     ],
+    measurements: SAREE_MEASURE,
     tags: ["pujo", "bestseller"],
     photo: U("1729101143891-a8fed18023f2"),
     photoAlt: "A woman in a red and white sari",
@@ -989,9 +1065,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Soft jamdani" },
       { label: "Motif", value: "Kalka buttis all over" },
-      { label: "Length", value: "5.5 m + blouse piece" },
       { label: "Care", value: "Dry clean only" },
     ],
+    measurements: SAREE_MEASURE,
     tags: ["pujo"],
     stock: 3,
     photo: U("1727934404073-797950f15a76"),
@@ -1012,9 +1088,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Silk-cotton" },
       { label: "Motif", value: "Kalka border" },
-      { label: "Length", value: "5.5 m + blouse piece" },
       { label: "Care", value: "Dry clean only" },
     ],
+    measurements: SAREE_MEASURE,
     tags: ["pujo", "new"],
     photo: U("1771507057886-defc3e54aa8c"),
     photoAlt: "A woman in a red and brown sari twirling joyfully",
@@ -1035,9 +1111,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Katan silk blend" },
       { label: "Motif", value: "Gold kalka border" },
-      { label: "Length", value: "5.5 m + blouse piece" },
       { label: "Care", value: "Dry clean only" },
     ],
+    measurements: SAREE_MEASURE,
     tags: [],
     photo: U("1732381917488-39f31539cd4f"),
     photoAlt: "A woman in a blue and gold sari",
@@ -1054,15 +1130,14 @@ export const products: Product[] = [
     price: 3700,
     blurb: "A 'house of roses' in pink, with a painted kalka pallu.",
     story:
-      "Soft pink silk-cotton with a pallu we paint by hand — kalkas and roses curling together. No two pallus come out the same.",
+      "Soft pink silk-cotton with a hand-painted pallu: kalkas and roses curling together. No two pallus come out the same.",
     note: "every pallu is painted by hand",
     details: [
       { label: "Fabric", value: "Silk-cotton" },
       { label: "Motif", value: "Hand-painted kalka pallu" },
-      { label: "Length", value: "5.5 m + blouse piece" },
-      { label: "Ready in", value: "7 – 10 days" },
     ],
-    tags: ["handpainted", "made-to-order"],
+    measurements: SAREE_MEASURE,
+    tags: ["handpainted"],
     photo: U("1732381917604-bc8f046965ee"),
     photoAlt: "A woman in a pink sari standing under a floral arch",
     focus: "50% 25%",
@@ -1086,7 +1161,11 @@ export const products: Product[] = [
       { label: "Pockets", value: "Yes, two!" },
       { label: "Care", value: "Machine wash cold" },
     ],
-    sizes: APPAREL_SIZES,
+    sizeChart: flared(45),
+    colours: [
+      { name: "Neel", hex: "#23305E" },
+      { name: "Sindoor", hex: "#A8232F", palette: ["#A8232F", "#E3B24B", "#F8E3E1"] },
+    ],
     tags: ["bestseller"],
     photo: U("1760287364219-160c234ded00"),
     photoAlt: "Dark blue dress with a paisley pattern on display",
@@ -1108,9 +1187,13 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Mulmul cotton" },
       { label: "Print", value: "Hand block, natural dyes" },
-      { label: "Size", value: "2.4 m × 1 m" },
       { label: "Care", value: "Hand wash cold, separately" },
     ],
+    colours: [
+      { name: "Turmeric", hex: "#D9822B" },
+      { name: "Indigo", hex: "#2E3F7F", palette: ["#2E3F7F", "#D9822B", "#E8ECF6"] },
+    ],
+    measurements: [{ label: "Length × width", value: "2.4 m × 1 m" }],
     tags: ["new"],
     photo: U("1770732940492-ec02987b3d4c"),
     photoAlt: "Close-up of a paisley pattern with warm colours",
@@ -1130,9 +1213,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Cotton-modal" },
       { label: "Print", value: "Hand block" },
-      { label: "Size", value: "2 m × 0.7 m" },
       { label: "Care", value: "Hand wash cold" },
     ],
+    measurements: [{ label: "Length × width", value: "2 m × 0.7 m" }],
     tags: [],
     photo: U("1783763624907-b9974ce1dbe3"),
     photoAlt: "Repeating white and orange paisley pattern on a grey background",
@@ -1152,9 +1235,13 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Wool-viscose blend" },
       { label: "Weave", value: "Jacquard kalka" },
-      { label: "Size", value: "2 m × 1 m" },
       { label: "Care", value: "Dry clean only" },
     ],
+    colours: [
+      { name: "Midnight", hex: "#1D2B53" },
+      { name: "Maroon", hex: "#5E1624", palette: ["#5E1624", "#D9A441", "#F3E6E3"] },
+    ],
+    measurements: [{ label: "Length × width", value: "2 m × 1 m" }],
     tags: [],
     photo: U("1779628924706-0dcfcf6af52e"),
     photoAlt: "Intricate paisley pattern on dark blue textile",
@@ -1173,9 +1260,9 @@ export const products: Product[] = [
     details: [
       { label: "Fabric", value: "Printed cotton" },
       { label: "Print", value: "Hand block, assorted" },
-      { label: "Size", value: "1.8 m × 0.5 m" },
       { label: "Gift", value: "Comes wrapped with a note" },
     ],
+    measurements: [{ label: "Length × width", value: "1.8 m × 0.5 m" }],
     tags: [],
     photo: U("1779470703519-05af825e87cd"),
     photoAlt: "Colourful patterned textiles and scarves stacked for sale",
@@ -1243,4 +1330,36 @@ export function typesIn(collection: CollectionId | "all"): ProductType[] {
 
 export function priceFrom(collection: CollectionId): number {
   return Math.min(...products.filter((p) => p.collection === collection).map((p) => p.price));
+}
+
+/** What a visitor picks from: garment sizes from the size chart, or simple options like scents. */
+export function optionsOf(p: Product): string[] | undefined {
+  return p.sizeChart?.map((r) => r.size) ?? p.sizes;
+}
+
+/** The chosen colour, or the first (photographed) one. */
+export function colourOf(p: Product, name?: string): Colour | undefined {
+  if (!p.colours?.length) return undefined;
+  return p.colours.find((c) => c.name === name) ?? p.colours[0];
+}
+
+/** Photo and drawing palette for a piece in a given colour. `photo` is undefined when that colour has no photo yet. */
+export function lookOf(p: Product, colourName?: string) {
+  const colour = colourOf(p, colourName);
+  const isFirst = !colour || colour === p.colours?.[0];
+  return {
+    colour,
+    photo: colour?.photo ?? (isFirst ? p.photo : undefined),
+    photoAlt: colour?.photoAlt ?? (isFirst ? p.photoAlt : `${p.name} in ${colour?.name}`),
+    palette: colour?.palette ?? p.palette,
+  };
+}
+
+/** "Bust 34–42″" style summary of a size chart. */
+export function sizeSummary(p: Product): string | undefined {
+  const chart = p.sizeChart;
+  if (!chart?.length) return undefined;
+  const range = `${chart[0].size}–${chart[chart.length - 1].size}`;
+  const busts = chart.map((r) => r.bust).filter((n): n is number => typeof n === "number");
+  return busts.length ? `${range} · bust ${busts[0]}–${busts[busts.length - 1]}″` : range;
 }

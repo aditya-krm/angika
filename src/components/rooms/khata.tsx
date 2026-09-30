@@ -217,7 +217,7 @@ export function Khata() {
           </div>
 
           {/* the cloth-bound cover */}
-          <div className="relative rounded-[16px] bg-[#8f1426] p-2.5 shadow-[0_50px_80px_-40px_rgb(60_10_15/0.7)] sm:p-4">
+          <div className="relative rounded-[16px] bg-maroon p-2.5 shadow-[0_50px_80px_-40px_rgb(60_10_15/0.7)] sm:p-4">
             <div
               className="absolute inset-0 rounded-[16px] bg-[repeating-linear-gradient(45deg,rgb(255_255_255/0.035)_0_2px,transparent_2px_5px)]"
               aria-hidden="true"

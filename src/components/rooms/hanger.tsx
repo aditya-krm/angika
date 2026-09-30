@@ -1,5 +1,6 @@
-import type { Product } from "@/data/catalog";
+import { lookOf, type Product } from "@/data/catalog";
 import { cx } from "@/lib/format";
+import { Wordmark } from "../brand";
 import { GarmentArt } from "../art/garment-art";
 import { PhotoOr } from "../product-art";
 
@@ -34,12 +35,12 @@ export function NeckLabel({ className }: { className?: string }) {
   return (
     <span
       className={cx(
-        "woven pointer-events-none absolute left-1/2 top-1.5 z-10 -translate-x-1/2 px-2 py-[3px] font-wordmark text-[0.62rem] italic leading-none text-kajal [--woven-bg:#fbf7ef]",
+        "woven pointer-events-none absolute left-1/2 top-1.5 z-10 flex -translate-x-1/2 items-center px-2 py-[4px] text-maroon [--woven-bg:#fbf7ef]",
         className,
       )}
       aria-hidden="true"
     >
-      Angika
+      <Wordmark label={false} className="h-[7px]" />
     </span>
   );
 }
@@ -52,6 +53,7 @@ export function GarmentOnHanger({
   className,
   artClassName,
   label = true,
+  colour,
 }: {
   product: Product;
   uid: string;
@@ -60,26 +62,38 @@ export function GarmentOnHanger({
   className?: string;
   artClassName?: string;
   label?: boolean;
+  /** Name of the colour to show; defaults to the photographed one. */
+  colour?: string;
 }) {
+  const look = lookOf(product, colour);
+  const art = (
+    <GarmentArt
+      product={{ ...product, palette: look.palette }}
+      uid={`${uid}-${look.colour?.name ?? "base"}`.replace(/\s+/g, "-")}
+      className={cx("w-[88%] drop-shadow-[0_14px_14px_rgb(0_0_0/0.14)]", artClassName)}
+    />
+  );
   return (
     <div className={cx("relative flex flex-col items-center", className)}>
       <Hanger className="relative z-10 -mb-[3%] w-[82%]" />
-      <PhotoOr
-        src={product.photo}
-        alt={product.photoAlt}
-        sizes={sizes}
-        focus={product.focus}
-        priority={priority}
-        frameClassName="aspect-[3/4] w-[88%] shadow-[0_18px_30px_-18px_rgb(var(--shadow)/0.55)]"
-        frameStyle={{ clipPath: SHOULDERS }}
-        fallback={
-          <GarmentArt
-            product={product}
-            uid={uid}
-            className={cx("w-[88%] drop-shadow-[0_14px_14px_rgb(0_0_0/0.14)]", artClassName)}
-          />
-        }
-      />
+      {look.photo ? (
+        <PhotoOr
+          key={look.photo}
+          src={look.photo}
+          alt={look.photoAlt}
+          sizes={sizes}
+          focus={product.focus}
+          priority={priority}
+          frameClassName="aspect-[3/4] w-[88%] shadow-[0_18px_30px_-18px_rgb(var(--shadow)/0.55)]"
+          frameStyle={{ clipPath: SHOULDERS }}
+          fallback={art}
+        />
+      ) : (
+        <>
+          {art}
+          <span className="sr-only">{look.photoAlt}</span>
+        </>
+      )}
       {label && <NeckLabel className="top-[calc(18%+2px)]" />}
     </div>
   );

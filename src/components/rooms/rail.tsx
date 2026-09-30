@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { collectionById, products, type ProductType } from "@/data/catalog";
+import { collectionById, products, sizeSummary, type ProductType } from "@/data/catalog";
 import { cx } from "@/lib/format";
 import { ChevronLeftIcon, ChevronRightIcon } from "../icons";
 import { useShop } from "../shop-provider";
 import { GarmentOnHanger } from "./hanger";
-import { KraftPrice, PotliToggle, RoomHeader, TagLine, WovenFilters } from "./room-parts";
+import { ColourSwatches, KraftPrice, PotliToggle, RoomHeader, TagLine, WovenFilters } from "./room-parts";
 
 type Kind = "all" | "saree" | "kurta" | "dress" | "lehenga";
 const KIND_TYPES: Record<Exclude<Kind, "all">, ProductType[]> = {
@@ -23,10 +23,13 @@ const KIND_LABEL: Record<Kind, string> = {
   lehenga: "Lehengas",
 };
 
+/** Lines the first hanger up with the page content; also used as scroll padding so snapping keeps it. */
+const RAIL_GUTTER = "max(1rem, min(2rem, 4vw), calc((100vw - 84rem) / 2 + 2rem))";
+
 const RAIL = products.filter((p) => p.collection === "twirl");
 
 export function Rail() {
-  const { openProduct } = useShop();
+  const { openProduct, choices } = useShop();
   const [kind, setKind] = useState<Kind>("all");
   const scroller = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState({ start: 0, size: 1 });
@@ -72,14 +75,12 @@ export function Rail() {
       <div className="relative mt-14">
         <div
           ref={scroller}
+          style={{ scrollPaddingInline: RAIL_GUTTER }}
           className="no-scrollbar snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth"
           tabIndex={0}
           aria-label="The rail. Scroll sideways to see every piece."
         >
-          <ul
-            className="relative flex w-max gap-2 pt-[11px] sm:gap-4"
-            style={{ paddingInline: "max(1rem, min(2rem, 4vw), calc((100vw - 84rem) / 2 + 2rem))" }}
-          >
+          <ul className="relative flex w-max gap-2 pt-[11px] sm:gap-4" style={{ paddingInline: RAIL_GUTTER }}>
             {/* the brass rod, with its wall brackets */}
             <span
               className="pointer-events-none absolute inset-x-0 top-[13px] h-[7px] rounded-full bg-[linear-gradient(#f6e1a0,#c9a24f_55%,#8a6a2a)] shadow-[0_3px_5px_rgb(0_0_0/0.25)]"
@@ -94,7 +95,13 @@ export function Rail() {
                   aria-label={`${p.name}, open in the trial room`}
                 >
                   <div className="sway origin-[50%_4px] transition-transform">
-                    <GarmentOnHanger product={p} uid="rail" sizes="(min-width: 640px) 240px, 200px" priority={i < 3} />
+                    <GarmentOnHanger
+                      product={p}
+                      uid="rail"
+                      colour={choices[p.id]?.colour}
+                      sizes="(min-width: 640px) 240px, 200px"
+                      priority={i < 3}
+                    />
                     <div className="absolute right-[2%] top-[17%] z-20 origin-left rotate-[8deg] transition-transform duration-500 group-hover:rotate-[2deg]">
                       <span
                         className="absolute -left-10 top-1/2 h-px w-10 origin-right rotate-[-24deg] bg-kraft-ink/40"
@@ -119,6 +126,10 @@ export function Rail() {
                     </p>
                   )}
                   <p className="mt-1.5 line-clamp-2 text-[0.88rem] leading-relaxed text-kajal-soft">{p.blurb}</p>
+                  {sizeSummary(p) && (
+                    <p className="label mt-2.5 !text-[0.58rem] !tracking-[0.14em] text-kajal-faint">{sizeSummary(p)}</p>
+                  )}
+                  <ColourSwatches product={p} className="mt-2.5" />
                   {p.note && (
                     <p className="mt-1.5 -rotate-1 font-hand text-[0.95rem] leading-snug text-pen">{p.note}</p>
                   )}

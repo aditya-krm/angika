@@ -1,12 +1,12 @@
 "use client";
 
-import { collectionById, products, typeLabels } from "@/data/catalog";
+import { collectionById, lookOf, products, typeLabels } from "@/data/catalog";
 import { cx, hashString } from "@/lib/format";
 import { FoldedCloth } from "../art/fabric";
 import { Kalka } from "../brand";
 import { PhotoOr } from "../product-art";
 import { useShop } from "../shop-provider";
-import { KraftPrice, PotliToggle, RoomHeader } from "./room-parts";
+import { ColourSwatches, KraftPrice, PotliToggle, RoomHeader } from "./room-parts";
 
 const TRUNK = products.filter((p) => p.collection === "kalka");
 
@@ -80,7 +80,7 @@ function PaintedTrunk() {
 }
 
 export function Trunk() {
-  const { openProduct } = useShop();
+  const { openProduct, choices } = useShop();
   return (
     <section id="trunk" className="relative scroll-mt-16 py-20 sm:py-28">
       <div className="mx-auto max-w-[84rem] px-4 sm:px-8">
@@ -126,23 +126,27 @@ export function Trunk() {
                 const h = hashString(p.id);
                 const dx = ((h % 13) - 6) * 1.4;
                 const rot = (((h >> 4) % 9) - 4) * 0.12;
+                const look = lookOf(p, choices[p.id]?.colour);
                 return (
                   <li key={p.id} style={{ transform: `translateX(${dx}px) rotate(${rot}deg)` }}>
                     <div className="group relative h-[5.6rem] transition-transform duration-500 ease-[var(--ease-cloth)] hover:translate-x-5 focus-within:translate-x-5 sm:h-24">
                       <FoldedCloth
-                        product={p}
-                        uid="trunk"
+                        product={{ ...p, palette: look.palette }}
+                        uid={`trunk-${look.colour?.name ?? "base"}`.replace(/\s+/g, "-")}
                         className="absolute inset-0 h-full w-full drop-shadow-[0_6px_6px_rgb(0_0_0/0.18)]"
                       />
                       <div className="relative flex h-full items-center gap-3 pl-3 pr-3 pt-4 sm:gap-4 sm:pl-5 sm:pr-5">
-                        <PhotoOr
-                          src={p.photo}
-                          alt={p.photoAlt}
-                          sizes="64px"
-                          focus={p.focus}
-                          frameClassName="hidden h-12 w-12 shrink-0 rounded-full ring-2 ring-[#fbf7ef] sm:block"
-                          fallback={null}
-                        />
+                        {look.photo && (
+                          <PhotoOr
+                            key={look.photo}
+                            src={look.photo}
+                            alt={look.photoAlt}
+                            sizes="64px"
+                            focus={p.focus}
+                            frameClassName="hidden h-12 w-12 shrink-0 rounded-full ring-2 ring-[#fbf7ef] sm:block"
+                            fallback={null}
+                          />
+                        )}
                         {/* dhobi chit, safety-pinned to the fold */}
                         <button
                           type="button"
@@ -164,6 +168,11 @@ export function Trunk() {
                           </span>
                         </button>
                         <div className="ml-auto flex shrink-0 items-center gap-2">
+                          {p.colours && p.colours.length > 1 && (
+                            <div className="rounded-full bg-[#fbf7ef]/90 px-2 py-1.5 shadow-sm">
+                              <ColourSwatches product={p} showName={false} />
+                            </div>
+                          )}
                           <PotliToggle product={p} compact className="hidden sm:inline-flex" />
                           <KraftPrice product={p} className={cx("rotate-[4deg]")} />
                         </div>

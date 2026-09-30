@@ -19,6 +19,10 @@
   --sindoor: #c21f32; /* lal paar red */
   --sindoor-deep: #8f1426;
   --sindoor-wash: #f8e3e1;
+  --maroon: #42141e; /* the Angika logo */
+  --maroon-deep: #2c0c14;
+  --cream: #e1d6c3; /* the logo's cream */
+  --brand: #42141e; /* logo colour on the page: maroon on light, cream on dark */
   --zari: #b08a3e; /* gold thread */
   --zari-soft: #efe3c6;
   --pen: #27459a; /* the blue ball-pen every tailor uses */
@@ -58,6 +62,7 @@
     --shiuli: #ff9a4d;
     --sobuj: #2b6a58;
     --neel: #8ea2e0;
+    --brand: #e1d6c3;
     --ledger: #f6f1e4;
     --shadow: 0 0 0;
     color-scheme: dark;
@@ -81,6 +86,7 @@
   --shiuli: #ff9a4d;
   --sobuj: #2b6a58;
   --neel: #8ea2e0;
+  --brand: #e1d6c3;
   --ledger: #f6f1e4;
   --shadow: 0 0 0;
   color-scheme: dark;
@@ -109,13 +115,16 @@
   --color-wood: var(--wood);
   --color-wood-dark: var(--wood-dark);
   --color-brass: var(--brass);
+  --color-maroon: var(--maroon);
+  --color-maroon-deep: var(--maroon-deep);
+  --color-cream: var(--cream);
+  --color-brand: var(--brand);
   --color-ledger: var(--ledger);
   --color-ledger-rule: var(--ledger-rule);
 
   --font-display: "Bodoni Moda Variable", "Bodoni Moda", "Didot", "Bodoni 72", Georgia, serif;
   --font-sans: "Archivo Variable", "Archivo", "Helvetica Neue", Arial, system-ui, sans-serif;
   --font-hand: "Kalam", "Bradley Hand", "Segoe Print", cursive;
-  --font-wordmark: "Playfair Display Variable", "Playfair Display", Georgia, serif;
   --font-sign: "Mrs Saint Delafield", "Snell Roundhand", cursive;
   --font-bn: "Tiro Bangla", "Noto Serif Bengali", "Kohinoor Bangla", serif;
   --font-bn-display: "Galada", "Tiro Bangla", "Kohinoor Bangla", serif;
@@ -185,9 +194,6 @@ p {
   font-variant-numeric: tabular-nums lining-nums;
 }
 
-@utility font-wordmark {
-  font-family: var(--font-wordmark);
-}
 @utility font-sign {
   font-family: var(--font-sign);
 }
@@ -203,84 +209,91 @@ p {
 }
 
 @layer components {
-/* The lal paar: a red saree border with a gold zari thread and a woven temple edge. */
-.paar {
-  --paar-h: 14px;
-  height: var(--paar-h);
-  background:
-    linear-gradient(var(--zari), var(--zari)) 0 3px / 100% 1px no-repeat,
-    linear-gradient(var(--zari), var(--zari)) 0 calc(100% - 3px) / 100% 1px no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14'%3E%3Cpath d='M0 14 6 8l6 6Z' fill='%23e8c56d' fill-opacity='.55'/%3E%3C/svg%3E") 0 0 / 12px 100% repeat-x,
-    var(--sindoor);
-}
-.paar-v {
-  width: 14px;
-  background:
-    linear-gradient(var(--zari), var(--zari)) 3px 0 / 1px 100% no-repeat,
-    linear-gradient(var(--zari), var(--zari)) calc(100% - 3px) 0 / 1px 100% no-repeat,
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18'%3E%3Cpath d='M7 3c3 2 4 5 2 8-1 2-4 2-5 0-1-3 2-3 3-8Z' fill='%23e8c56d' fill-opacity='.6'/%3E%3C/svg%3E") 0 0 / 100% 18px repeat-y,
-    var(--sindoor);
-}
+  /* The lal paar: a red saree border with a gold zari thread and a woven temple edge. */
+  .paar {
+    --paar-h: 14px;
+    height: var(--paar-h);
+    background:
+      linear-gradient(var(--zari), var(--zari)) 0 3px / 100% 1px no-repeat,
+      linear-gradient(var(--zari), var(--zari)) 0 calc(100% - 3px) / 100% 1px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14'%3E%3Cpath d='M0 14 6 8l6 6Z' fill='%23e8c56d' fill-opacity='.55'/%3E%3C/svg%3E")
+        0 0 / 12px 100% repeat-x,
+      var(--sindoor);
+  }
+  .paar-v {
+    width: 14px;
+    background:
+      linear-gradient(var(--zari), var(--zari)) 3px 0 / 1px 100% no-repeat,
+      linear-gradient(var(--zari), var(--zari)) calc(100% - 3px) 0 / 1px 100% no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='18'%3E%3Cpath d='M7 3c3 2 4 5 2 8-1 2-4 2-5 0-1-3 2-3 3-8Z' fill='%23e8c56d' fill-opacity='.6'/%3E%3C/svg%3E")
+        0 0 / 100% 18px repeat-y,
+      var(--sindoor);
+  }
 
-/* Kraft swing tag with a punched eyelet. */
-.kraft-tag {
-  position: relative;
-  background: var(--kraft);
-  color: var(--kraft-ink);
-  clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
-  box-shadow: inset 0 0 0 1px rgb(63 45 27 / 0.08);
-}
-.kraft-tag::after {
-  content: "";
-  position: absolute;
-  left: 9px;
-  top: 50%;
-  width: 7px;
-  height: 7px;
-  margin-top: -3.5px;
-  border-radius: 99px;
-  background: var(--tant);
-  box-shadow:
-    0 0 0 1.5px rgb(255 255 255 / 0.5),
-    inset 0 1px 1px rgb(63 45 27 / 0.35);
-}
+  /* Kraft swing tag with a punched eyelet. */
+  .kraft-tag {
+    position: relative;
+    background: var(--kraft);
+    color: var(--kraft-ink);
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 10px 100%, 0 50%);
+    box-shadow: inset 0 0 0 1px rgb(63 45 27 / 0.08);
+  }
+  .kraft-tag::after {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 50%;
+    width: 7px;
+    height: 7px;
+    margin-top: -3.5px;
+    border-radius: 99px;
+    background: var(--tant);
+    box-shadow:
+      0 0 0 1.5px rgb(255 255 255 / 0.5),
+      inset 0 1px 1px rgb(63 45 27 / 0.35);
+  }
 
-/* Woven clothing label, used for filters and sizes. */
-.woven {
-  position: relative;
-  border-radius: 2px;
-  background:
-    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.035) 0 1px, transparent 1px 3px),
-    var(--woven-bg, var(--tant));
-  box-shadow:
-    inset 0 0 0 1px var(--woven-edge, var(--line)),
-    inset 0 0 0 3px var(--woven-bg, var(--tant)),
-    inset 0 0 0 4px rgb(var(--shadow) / 0.06);
-}
+  /* Woven clothing label, used for filters and sizes. */
+  .woven {
+    position: relative;
+    border-radius: 2px;
+    background:
+      repeating-linear-gradient(90deg, rgb(0 0 0 / 0.035) 0 1px, transparent 1px 3px), var(--woven-bg, var(--tant));
+    box-shadow:
+      inset 0 0 0 1px var(--woven-edge, var(--line)),
+      inset 0 0 0 3px var(--woven-bg, var(--tant)),
+      inset 0 0 0 4px rgb(var(--shadow) / 0.06);
+  }
 
-/* Measuring tape */
-.tape {
-  background:
-    repeating-linear-gradient(90deg, #2a2320 0 1px, transparent 1px 10px) 0 0 / 100% 7px no-repeat,
-    repeating-linear-gradient(90deg, #2a2320 0 1px, transparent 1px 50px) 0 0 / 100% 12px no-repeat,
-    linear-gradient(#f1c946, #e9b92c);
-}
+  /* Measuring tape */
+  .tape {
+    background:
+      repeating-linear-gradient(90deg, #2a2320 0 1px, transparent 1px 10px) 0 0 / 100% 7px no-repeat,
+      repeating-linear-gradient(90deg, #2a2320 0 1px, transparent 1px 50px) 0 0 / 100% 12px no-repeat,
+      linear-gradient(#f1c946, #e9b92c);
+  }
 
-/* Running stitch line */
-.stitch {
-  background-image: linear-gradient(90deg, currentColor 55%, transparent 55%);
-  background-size: 11px 1.5px;
-  background-repeat: repeat-x;
-  background-position: 0 50%;
-}
+  /* Running stitch line */
+  .stitch {
+    background-image: linear-gradient(90deg, currentColor 55%, transparent 55%);
+    background-size: 11px 1.5px;
+    background-repeat: repeat-x;
+    background-position: 0 50%;
+  }
 
-/* Ledger paper */
-.ledger {
-  background-color: var(--ledger);
-  background-image:
-    linear-gradient(90deg, transparent 3.2rem, rgb(194 31 50 / 0.45) 3.2rem, rgb(194 31 50 / 0.45) calc(3.2rem + 1px), transparent calc(3.2rem + 1px)),
-    repeating-linear-gradient(transparent 0 calc(2.75rem - 1px), var(--ledger-rule) calc(2.75rem - 1px) 2.75rem);
-}
+  /* Ledger paper */
+  .ledger {
+    background-color: var(--ledger);
+    background-image:
+      linear-gradient(
+        90deg,
+        transparent 3.2rem,
+        rgb(194 31 50 / 0.45) 3.2rem,
+        rgb(194 31 50 / 0.45) calc(3.2rem + 1px),
+        transparent calc(3.2rem + 1px)
+      ),
+      repeating-linear-gradient(transparent 0 calc(2.75rem - 1px), var(--ledger-rule) calc(2.75rem - 1px) 2.75rem);
+  }
 }
 
 /* ─────────────────────────── motion ─────────────────────────── */

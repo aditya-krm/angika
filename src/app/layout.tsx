@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/bodoni-moda/opsz.css";
 import "@fontsource-variable/bodoni-moda/opsz-italic.css";
 import "@fontsource-variable/archivo/wdth.css";
-import "@fontsource-variable/playfair-display/wght-italic.css";
 import "@fontsource/kalam/400.css";
 import "@fontsource/kalam/700.css";
 import "@fontsource/galada/400.css";
@@ -30,8 +29,8 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#c21f32" },
-    { media: "(prefers-color-scheme: dark)", color: "#c21f32" },
+    { media: "(prefers-color-scheme: light)", color: "#42141e" },
+    { media: "(prefers-color-scheme: dark)", color: "#42141e" },
   ],
 };
 

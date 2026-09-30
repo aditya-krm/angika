@@ -1,48 +1,85 @@
+import Image from "next/image";
+import figureImg from "@/assets/brand/angika-figure.png";
+import logoImg from "@/assets/brand/angika-logo.png";
+import markCreamImg from "@/assets/brand/angika-mark-cream.png";
+import taglineImg from "@/assets/brand/angika-tagline.png";
+import wordmarkImg from "@/assets/brand/angika-wordmark.png";
 import { cx } from "@/lib/format";
 
-/** The Angika wordmark: italic Playfair with the little paintbrush from the logo. */
-export function Wordmark({
+type Asset = string | { src: string };
+const srcOf = (a: Asset) => (typeof a === "string" ? a : a.src);
+
+/**
+ * Paints one of the brand PNGs (white shapes on transparent) in the current text colour,
+ * so the same artwork works as ink on paper or cream on maroon.
+ */
+function Masked({
+  asset,
+  ratio,
   className,
-  size = "md",
-  tone = "ink",
+  label,
 }: {
+  asset: Asset;
+  ratio: string;
   className?: string;
-  size?: "md" | "xl";
-  tone?: "ink" | "ivory";
+  label?: string;
 }) {
-  const big = size === "xl";
+  const url = `url(${srcOf(asset)})`;
   return (
-    <span className={cx("inline-flex items-end gap-1.5", className)}>
-      <span
-        className={cx(
-          "font-wordmark font-medium italic leading-none tracking-tight",
-          big ? "text-[clamp(4rem,12vw,9.5rem)]" : "text-[1.75rem]",
-          tone === "ivory" ? "text-[#fbf6ee]" : "text-kajal",
-        )}
-      >
-        Angika
-      </span>
-      <svg
-        viewBox="0 0 24 24"
-        className={cx(
-          big ? "mb-[1.2vw] h-[clamp(2rem,5vw,4rem)] w-[clamp(2rem,5vw,4rem)]" : "mb-1 h-4 w-4",
-          tone === "ivory" ? "text-[#e8c56d]" : "text-sindoor",
-        )}
-        aria-hidden="true"
-        focusable="false"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-        strokeLinecap="round"
-      >
-        <path d="M21 3 11.5 12.5" />
-        <path
-          d="M12 12c-2.6-.6-5 .9-5.2 3.5-.1 1.7-1 2.6-2.8 3 3.8 1.6 8.5.6 9-3.5"
-          fill="currentColor"
-          fillOpacity={0.35}
-        />
-      </svg>
-    </span>
+    <span
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+      className={cx("inline-block shrink-0 bg-current", className)}
+      style={{
+        aspectRatio: ratio,
+        WebkitMaskImage: url,
+        maskImage: url,
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+      }}
+    />
+  );
+}
+
+/** "ANGIKA", traced from the logo. Size it with a height class; colour follows `color`. */
+export function Wordmark({ className, label = true }: { className?: string; label?: boolean }) {
+  return <Masked asset={wordmarkImg} ratio="716 / 145" className={className} label={label ? "Angika" : undefined} />;
+}
+
+/** "Where Style Meets Art", traced from the logo. */
+export function Tagline({ className }: { className?: string }) {
+  return <Masked asset={taglineImg} ratio="709 / 37" className={className} label="Where Style Meets Art" />;
+}
+
+/** The saree silhouette from the logo. */
+export function BrandFigure({ className }: { className?: string }) {
+  return <Masked asset={figureImg} ratio="348 / 480" className={className} />;
+}
+
+/** The round maroon logo badge. */
+export function LogoBadge({ className, priority }: { className?: string; priority?: boolean }) {
+  return (
+    <Image
+      src={logoImg}
+      alt=""
+      aria-hidden="true"
+      width={96}
+      height={96}
+      priority={priority}
+      className={cx("rounded-full", className)}
+    />
+  );
+}
+
+/** The full logo artwork in cream, for maroon grounds (the footer). */
+export function LogoMarkCream({ className }: { className?: string }) {
+  return (
+    <Image src={markCreamImg} alt="Angika · Where Style Meets Art" width={480} height={590} className={className} />
   );
 }
 

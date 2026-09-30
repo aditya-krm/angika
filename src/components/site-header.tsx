@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cx } from "@/lib/format";
-import { Paar, Wordmark } from "./brand";
+import { LogoBadge, Paar, Wordmark } from "./brand";
 import { MoonIcon, SunIcon } from "./icons";
 
 const ROOMS = [
@@ -79,10 +79,13 @@ export function SiteHeader() {
           )}
         >
           <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between gap-6 px-4 sm:px-8">
-            <a href="#top" className="flex items-end gap-2" aria-label="Angika, back to the top">
-              <Wordmark />
-              <span className="font-bn-display mb-0.5 hidden text-sm text-sindoor sm:inline" lang="bn">
-                অঙ্গিকা
+            <a href="#top" className="flex items-center gap-2.5" aria-label="Angika, back to the top">
+              <LogoBadge priority className="h-10 w-10 shadow-[0_2px_6px_rgb(66_20_30/0.35)]" />
+              <span className="flex flex-col gap-1">
+                <Wordmark label={false} className="h-[1.2rem] text-brand" />
+                <span className="hidden font-sans text-[0.55rem] uppercase tracking-[0.28em] text-kajal-faint sm:block">
+                  Where style meets art
+                </span>
               </span>
             </a>
             <nav aria-label="Rooms" className="hidden items-center gap-8 lg:flex">
