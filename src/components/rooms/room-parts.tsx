@@ -19,15 +19,15 @@ export function RoomHeader({
 }) {
   const ivory = tone === "ivory";
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
-      <div>
+    <div className="grid gap-5 sm:gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
+      <div className="min-w-0">
         <p className={cx("label flex items-center gap-3", ivory ? "text-[#e8c56d]" : "text-sindoor")}>
           <span className={cx("h-px w-10", ivory ? "bg-[#e8c56d]" : "bg-sindoor")} />
           {collection.kicker}
         </p>
         <h2
           className={cx(
-            "mt-5 flex flex-wrap items-baseline gap-x-5 font-display text-[clamp(3.4rem,8vw,7.4rem)] font-normal leading-[0.9] tracking-[-0.025em]",
+            "mt-4 flex flex-wrap items-baseline gap-x-4 font-display text-[3.2rem] font-normal leading-[0.9] tracking-[-0.025em] sm:mt-5 sm:gap-x-5 sm:text-[clamp(3.4rem,8vw,7.4rem)]",
             ivory ? "text-[#fbf6ee]" : "text-kajal",
           )}
         >
@@ -42,13 +42,18 @@ export function RoomHeader({
             {collection.bengali}
           </span>
         </h2>
-        <p className={cx("mt-4 flex items-center gap-2 font-hand text-xl", ivory ? "text-[#f3d98f]" : "text-pen")}>
+        <p
+          className={cx(
+            "mt-3 flex items-center gap-2 font-hand text-lg sm:mt-4 sm:text-xl",
+            ivory ? "text-[#f3d98f]" : "text-pen",
+          )}
+        >
           <HandArrow variant="swoop" className={cx("w-12 -scale-x-100 rotate-[160deg]", ivory && "!text-[#f3d98f]")} />
           {collection.handNote}
         </p>
       </div>
-      <div className={cx("max-w-xl", ivory ? "text-[#f1e6d8]/85" : "text-kajal-soft")}>
-        <p className="text-[1.02rem] leading-[1.75]">{collection.blurb}</p>
+      <div className={cx("min-w-0 max-w-xl", ivory ? "text-[#f1e6d8]/85" : "text-kajal-soft")}>
+        <p className="text-[0.97rem] leading-[1.7] sm:text-[1.02rem] sm:leading-[1.75]">{collection.blurb}</p>
         {children}
       </div>
     </div>
@@ -71,7 +76,7 @@ export function WovenFilters<T extends string>({
     <div
       role="radiogroup"
       aria-label={label}
-      className="no-scrollbar -mx-4 mt-7 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0"
+      className="no-scrollbar -mx-4 mt-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:mt-7 sm:flex-wrap sm:px-0"
     >
       {options.map((o) => {
         const on = o.id === value;

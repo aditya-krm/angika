@@ -65,14 +65,14 @@ export function Rail() {
   };
 
   return (
-    <section id="rail" className="relative scroll-mt-16 pb-24 pt-20 sm:pt-28">
+    <section id="rail" className="relative scroll-mt-16 pb-14 pt-14 sm:pb-24 sm:pt-28">
       <div className="mx-auto max-w-[84rem] px-4 sm:px-8">
         <RoomHeader collection={collectionById.twirl}>
           <WovenFilters label="Kinds of clothes" options={options} value={kind} onChange={setKind} />
         </RoomHeader>
       </div>
 
-      <div className="relative mt-14">
+      <div className="relative mt-9 sm:mt-14">
         <div
           ref={scroller}
           style={{ scrollPaddingInline: RAIL_GUTTER }}
@@ -87,7 +87,7 @@ export function Rail() {
               aria-hidden="true"
             />
             {items.map((p, i) => (
-              <li key={p.id} className="group relative w-[12.5rem] shrink-0 snap-start sm:w-[15rem]">
+              <li key={p.id} className="group relative w-[56vw] max-w-[15rem] shrink-0 snap-start sm:w-[15rem]">
                 <button
                   type="button"
                   onClick={() => openProduct(p.id)}
@@ -140,14 +140,14 @@ export function Rail() {
           </ul>
         </div>
 
-        <div className="mx-auto mt-10 flex max-w-[84rem] items-center gap-5 px-4 sm:px-8">
+        <div className="mx-auto mt-6 flex max-w-[84rem] items-center gap-5 px-4 sm:mt-10 sm:px-8">
           <div className="relative h-[2px] flex-1 bg-line" aria-hidden="true">
             <span
               className="absolute inset-y-[-1px] rounded-full bg-sindoor transition-[left,width] duration-300"
               style={{ left: `${progress.start * 100}%`, width: `${progress.size * 100}%` }}
             />
           </div>
-          <div className="flex gap-2">
+          <div className="hidden gap-2 sm:flex">
             {([-1, 1] as const).map((d) => (
               <button
                 key={d}

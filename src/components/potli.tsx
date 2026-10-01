@@ -73,7 +73,7 @@ export function PotliButton() {
     <button
       type="button"
       onClick={() => setChithiOpen(true)}
-      className="group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+1.1rem)] right-4 z-40 flex items-end sm:right-6 2xl:right-10"
+      className="group fixed bottom-[calc(env(safe-area-inset-bottom,0px)+0.85rem)] right-3 z-40 flex items-end sm:bottom-[calc(env(safe-area-inset-bottom,0px)+1.1rem)] sm:right-6 2xl:right-10"
       aria-label={`Open your potli, ${potli.length} ${potli.length === 1 ? "piece" : "pieces"}`}
     >
       <span className="mb-2 mr-1 hidden rounded-full bg-kajal px-3 py-1.5 font-hand text-sm text-tant opacity-0 shadow-lg transition-opacity group-hover:opacity-100 sm:block">
@@ -81,10 +81,13 @@ export function PotliButton() {
       </span>
       <span
         key={bump}
-        className={cx("relative block h-16 w-16 drop-shadow-[0_10px_14px_rgb(0_0_0/0.3)]", bump > 0 && "potli-bounce")}
+        className={cx(
+          "relative block h-14 w-14 drop-shadow-[0_10px_14px_rgb(0_0_0/0.3)] sm:h-16 sm:w-16",
+          bump > 0 && "potli-bounce",
+        )}
       >
         <PotliDrawing className="h-full w-full" />
-        <span className="kraft-tag tabular absolute -right-3 top-6 rotate-[14deg] py-0.5 pl-5 pr-2 font-hand text-sm font-bold">
+        <span className="kraft-tag tabular absolute -right-3 top-5 rotate-[14deg] sm:top-6 py-0.5 pl-5 pr-2 font-hand text-sm font-bold">
           {potli.length}
         </span>
       </span>

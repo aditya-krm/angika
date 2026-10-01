@@ -171,7 +171,7 @@ export function Khata() {
   );
 
   return (
-    <section id="khata" className="relative scroll-mt-16 overflow-x-clip bg-tant-2 py-20 sm:py-28">
+    <section id="khata" className="relative scroll-mt-16 overflow-x-clip bg-tant-2 py-14 sm:py-28">
       <div className="paar absolute inset-x-0 top-0" aria-hidden="true" />
       <div className="mx-auto max-w-[84rem] px-4 sm:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -193,7 +193,7 @@ export function Khata() {
           <div
             role="radiogroup"
             aria-label="Show a room"
-            className="absolute -top-11 left-6 z-10 flex gap-2 sm:left-12"
+            className="absolute -top-11 left-6 z-10 flex gap-2 max-[379px]:left-3 max-[379px]:gap-1.5 sm:left-12"
           >
             {RIBBONS.map((r) => {
               const on = room === r.id;
@@ -205,7 +205,7 @@ export function Khata() {
                   aria-checked={on}
                   onClick={() => setRoom(r.id)}
                   className={cx(
-                    "relative w-[4.4rem] pb-5 pt-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-white transition-transform sm:w-[5.4rem]",
+                    "relative w-[4.4rem] pb-5 pt-2 text-center text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-white transition-transform max-[379px]:w-[3.8rem] max-[379px]:text-[0.62rem] max-[379px]:tracking-[0.08em] sm:w-[5.4rem]",
                     on ? "-translate-y-2" : "translate-y-1 hover:-translate-y-0.5",
                   )}
                   style={{ background: r.color, clipPath: "polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)" }}
@@ -222,7 +222,7 @@ export function Khata() {
               className="absolute inset-0 rounded-[16px] bg-[repeating-linear-gradient(45deg,rgb(255_255_255/0.035)_0_2px,transparent_2px_5px)]"
               aria-hidden="true"
             />
-            <div className="relative grid overflow-hidden rounded-[8px] lg:grid-cols-2">
+            <div className="relative grid grid-cols-1 overflow-hidden rounded-[8px] lg:grid-cols-2">
               {/* left page */}
               <div className="ledger relative pb-8 pr-3 pt-0 sm:pr-6">
                 <div className="flex h-11 items-end justify-between gap-3 pb-1 pl-[3.2rem]">

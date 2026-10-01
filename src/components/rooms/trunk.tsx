@@ -82,14 +82,14 @@ function PaintedTrunk() {
 export function Trunk() {
   const { openProduct, choices } = useShop();
   return (
-    <section id="trunk" className="relative scroll-mt-16 py-20 sm:py-28">
+    <section id="trunk" className="relative scroll-mt-16 py-14 sm:py-28">
       <div className="mx-auto max-w-[84rem] px-4 sm:px-8">
         <RoomHeader collection={collectionById.kalka} />
 
-        <div className="mt-16 grid gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        <div className="mt-10 grid grid-cols-1 gap-10 sm:mt-16 sm:gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
           {/* What is kalka? */}
           <aside className="lg:sticky lg:top-28 lg:self-start">
-            <div className="relative overflow-hidden rounded-[1.75rem] bg-[#1d2a55] p-8 text-[#f4ecdf] sm:p-10">
+            <div className="relative overflow-hidden rounded-[1.75rem] bg-[#1d2a55] p-6 text-[#f4ecdf] sm:p-10">
               <Kalka className="absolute -right-10 -top-6 h-72 w-60 rotate-12 text-[#d9b45a]/25" strokeWidth={0.9} />
               <p className="label text-[#d9b45a]">What is kalka?</p>
               <p className="mt-4 font-display text-[2.1rem] leading-[1.1]">
@@ -128,14 +128,18 @@ export function Trunk() {
                 const rot = (((h >> 4) % 9) - 4) * 0.12;
                 const look = lookOf(p, choices[p.id]?.colour);
                 return (
-                  <li key={p.id} style={{ transform: `translateX(${dx}px) rotate(${rot}deg)` }}>
+                  <li
+                    key={p.id}
+                    className="[transform:translateX(calc(var(--dx)*0.35))_rotate(var(--rot))] sm:[transform:translateX(var(--dx))_rotate(var(--rot))]"
+                    style={{ "--dx": `${dx}px`, "--rot": `${rot}deg` } as React.CSSProperties}
+                  >
                     <div className="group relative h-[5.6rem] transition-transform duration-500 ease-[var(--ease-cloth)] hover:translate-x-5 focus-within:translate-x-5 sm:h-24">
                       <FoldedCloth
                         product={{ ...p, palette: look.palette }}
                         uid={`trunk-${look.colour?.name ?? "base"}`.replace(/\s+/g, "-")}
                         className="absolute inset-0 h-full w-full drop-shadow-[0_6px_6px_rgb(0_0_0/0.18)]"
                       />
-                      <div className="relative flex h-full items-center gap-3 pl-3 pr-3 pt-4 sm:gap-4 sm:pl-5 sm:pr-5">
+                      <div className="relative flex h-full items-center gap-2 pl-2.5 pr-2 pt-4 sm:gap-4 sm:pl-5 sm:pr-5">
                         {look.photo && (
                           <PhotoOr
                             key={look.photo}
@@ -151,29 +155,29 @@ export function Trunk() {
                         <button
                           type="button"
                           onClick={() => openProduct(p.id)}
-                          className="relative min-w-0 max-w-[62%] rounded-[3px] bg-[#fbf7ef] px-3 py-1.5 text-left shadow-[0_3px_8px_-3px_rgb(0_0_0/0.35)] transition-transform hover:-rotate-1"
+                          className="relative min-w-0 flex-1 rounded-[3px] bg-[#fbf7ef] px-3 py-1.5 sm:max-w-[62%] sm:flex-none text-left shadow-[0_3px_8px_-3px_rgb(0_0_0/0.35)] transition-transform hover:-rotate-1"
                           style={{ transform: `rotate(${i % 2 ? 0.8 : -0.8}deg)` }}
                         >
                           <SafetyPin className="absolute -left-4 -top-1 h-3 w-9" />
-                          <span className="block truncate font-display text-[1.02rem] leading-tight text-[#1e1a1d] sm:text-[1.12rem]">
+                          <span className="line-clamp-2 font-display text-[0.98rem] leading-[1.15] text-[#1e1a1d] sm:block sm:truncate sm:text-[1.12rem] sm:leading-tight">
                             {p.name}
                           </span>
                           <span className="flex items-baseline gap-2 text-[0.72rem] text-[#6b6064]">
                             {p.bn && (
-                              <span className="font-bn text-[0.82rem]" lang="bn">
+                              <span className="shrink-0 whitespace-nowrap font-bn text-[0.82rem]" lang="bn">
                                 {p.bn}
                               </span>
                             )}
                             <span className="truncate">{typeLabels[p.type]}</span>
                           </span>
                         </button>
-                        <div className="ml-auto flex shrink-0 items-center gap-2">
+                        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
                           {p.colours && p.colours.length > 1 && (
-                            <div className="rounded-full bg-[#fbf7ef]/90 px-2 py-1.5 shadow-sm">
+                            <div className="hidden rounded-full bg-[#fbf7ef]/90 px-2 py-1.5 shadow-sm sm:block">
                               <ColourSwatches product={p} showName={false} />
                             </div>
                           )}
-                          <PotliToggle product={p} compact className="hidden sm:inline-flex" />
+                          <PotliToggle product={p} compact />
                           <KraftPrice product={p} className={cx("rotate-[4deg]")} />
                         </div>
                       </div>

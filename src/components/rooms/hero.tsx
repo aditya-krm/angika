@@ -32,10 +32,10 @@ function RoomTag({ children, className }: { children: React.ReactNode; className
 /** Painted door front: sindoor lacquer, zari border, a big kalka. */
 function DoorFront({ side }: { side: "l" | "r" }) {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-[#c21f32] [backface-visibility:hidden]">
+    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-[#c21f32] backface-hidden">
       <div className="absolute inset-0 bg-[linear-gradient(100deg,rgb(255_255_255/0.14),transparent_35%,rgb(0_0_0/0.12))]" />
-      <div className="absolute inset-[7%] rounded-[2px] border border-[#e8c56d]/70" />
-      <div className="absolute inset-[10%] rounded-[2px] border border-[#e8c56d]/35" />
+      <div className="absolute inset-[7%] rounded-xs border border-[#e8c56d]/70" />
+      <div className="absolute inset-[10%] rounded-xs border border-[#e8c56d]/35" />
       <Kalka
         className={`absolute left-1/2 top-1/2 h-[42%] w-[62%] -translate-x-1/2 -translate-y-1/2 text-[#e8c56d] ${side === "r" ? "-scale-x-100" : ""}`}
         strokeWidth={1.1}
@@ -54,8 +54,8 @@ function DoorFront({ side }: { side: "l" | "r" }) {
 
 function DoorBack({ side }: { side: "l" | "r" }) {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-maroon-deep [backface-visibility:hidden] [transform:rotateY(180deg)]">
-      <div className="absolute inset-[6%] rounded-[2px] bg-tant-2">
+    <div className="absolute inset-0 overflow-hidden rounded-[3px] bg-maroon-deep backface-hidden transform-[rotateY(180deg)]">
+      <div className="absolute inset-[6%] rounded-xs bg-tant-2">
         {side === "l" ? (
           <div className="absolute inset-x-[14%] top-[10%] bottom-[22%] rounded-[50%] bg-[linear-gradient(135deg,#eef2f4,#b7c1c8_42%,#f6f8fa_58%,#a9b3ba)] shadow-inner" />
         ) : (
@@ -74,7 +74,7 @@ function DoorBack({ side }: { side: "l" | "r" }) {
 
 function Almirah() {
   return (
-    <div className="relative mx-auto w-full max-w-[36rem] px-[13%] pb-6 pt-10">
+    <div className="relative mx-auto w-full max-w-xl px-[13%] pb-6 pt-10">
       {/* crown */}
       <div className="relative z-10 -mb-px">
         <svg viewBox="0 0 400 60" className="block w-full" aria-hidden="true" focusable="false">
@@ -87,9 +87,9 @@ function Almirah() {
       </div>
 
       {/* body */}
-      <div className="relative rounded-b-[4px] bg-maroon p-[4.5%] shadow-[0_40px_70px_-40px_rgb(var(--shadow)/0.7)]">
-        <div className="absolute inset-0 rounded-b-[4px] bg-[linear-gradient(90deg,rgb(0_0_0/0.2),transparent_12%,transparent_88%,rgb(0_0_0/0.2))]" />
-        <div className="relative [perspective:1600px]">
+      <div className="relative rounded-b-sm bg-maroon p-[4.5%] shadow-[0_40px_70px_-40px_rgb(var(--shadow)/0.7)]">
+        <div className="absolute inset-0 rounded-b-sm bg-[linear-gradient(90deg,rgb(0_0_0/0.2),transparent_12%,transparent_88%,rgb(0_0_0/0.2))]" />
+        <div className="relative perspective-[1600px]">
           {/* upper cupboard */}
           <div className="relative grid aspect-[4/4.1] grid-cols-2 bg-[#efe6d8] shadow-[inset_0_10px_30px_rgb(60_30_20/0.35)] dark:bg-[#2b2224]">
             {/* rail compartment */}
@@ -98,7 +98,7 @@ function Almirah() {
               className="group relative block border-r-[6px] border-[#b58a57]"
               aria-label="Go to The Rail: dresses and sarees"
             >
-              <span className="absolute inset-x-[6%] top-[9%] h-[5px] rounded-full bg-[linear-gradient(#f3d98f,#b8913e)] shadow" />
+              <span className="absolute inset-x-[6%] top-[9%] h-1.25 rounded-full bg-[linear-gradient(#f3d98f,#b8913e)] shadow" />
               <div className="absolute inset-x-[2%] top-[7.5%] flex justify-center">
                 {RAIL.map((p, i) => (
                   <div
@@ -155,11 +155,11 @@ function Almirah() {
             </a>
 
             {/* doors */}
-            <div className="door-l absolute inset-y-0 left-0 w-1/2 [transform-style:preserve-3d]" aria-hidden="true">
+            <div className="door-l absolute inset-y-0 left-0 w-1/2 transform-3d" aria-hidden="true">
               <DoorFront side="l" />
               <DoorBack side="l" />
             </div>
-            <div className="door-r absolute inset-y-0 right-0 w-1/2 [transform-style:preserve-3d]" aria-hidden="true">
+            <div className="door-r absolute inset-y-0 right-0 w-1/2 transform-3d" aria-hidden="true">
               <DoorFront side="r" />
               <DoorBack side="r" />
             </div>
@@ -167,7 +167,7 @@ function Almirah() {
 
           {/* drawer, pulled open */}
           <a href="#trunk" className="group relative mt-[3%] block" aria-label="Go to The Trunk: kalka textiles">
-            <div className="relative mx-[3%] flex flex-col-reverse gap-[2px] bg-[#e7dccb] px-[5%] pt-[3%] shadow-[inset_0_8px_16px_rgb(60_30_20/0.3)] dark:bg-[#2b2224]">
+            <div className="relative mx-[3%] flex flex-col-reverse gap-0.5 bg-[#e7dccb] px-[5%] pt-[3%] shadow-[inset_0_8px_16px_rgb(60_30_20/0.3)] dark:bg-[#2b2224]">
               {DRAWER.map((p, i) => (
                 <FoldedCloth
                   key={p.id}
@@ -178,11 +178,11 @@ function Almirah() {
                 />
               ))}
             </div>
-            <div className="relative flex h-10 items-center justify-center rounded-[2px] bg-[#c21f32] shadow-[0_10px_18px_-10px_rgb(0_0_0/0.6)] sm:h-14">
-              <div className="absolute inset-[10%_3%] rounded-[2px] border border-[#e8c56d]/60" />
+            <div className="relative flex h-10 items-center justify-center rounded-xs bg-[#c21f32] shadow-[0_10px_18px_-10px_rgb(0_0_0/0.6)] sm:h-14">
+              <div className="absolute inset-[10%_3%] rounded-xs border border-[#e8c56d]/60" />
               <span className="h-2.5 w-14 rounded-full bg-[linear-gradient(#f6dd97,#b8913e)] shadow" />
             </div>
-            <RoomTag className="-bottom-3 right-[6%] rotate-[-3deg]">the trunk →</RoomTag>
+            <RoomTag className="-bottom-3 right-[6%] -rotate-3">the trunk →</RoomTag>
           </a>
         </div>
       </div>
@@ -198,14 +198,18 @@ function Almirah() {
 export function Hero() {
   return (
     <section id="top" className="relative overflow-x-clip">
-      <div className="mx-auto grid max-w-[84rem] items-center gap-6 px-4 pb-16 pt-8 sm:px-8 lg:grid-cols-[1fr_1.05fr] lg:gap-4 lg:pb-24 lg:pt-10">
-        <div className="relative z-10 max-w-[38rem]">
+      {/* Phones read top → almirah → bottom; on desktop the two text halves sit in column one,
+          centred against the almirah by the 1fr rows above and below them. */}
+      <div className="mx-auto grid max-w-336 items-center gap-2 px-4 pb-14 pt-7 sm:gap-6 sm:px-8 sm:pb-16 sm:pt-8 lg:grid-cols-[1fr_1.05fr] lg:grid-rows-[1fr_auto_auto_1fr] lg:gap-x-4 lg:gap-y-0 lg:pb-24 lg:pt-10">
+        <div className="relative z-10 max-w-152 lg:col-start-1 lg:row-start-2">
           <p className="rise label flex items-center gap-3 text-sindoor">
-            <span className="h-px w-10 bg-sindoor" />
-            Angika · where style meets art
+            <span className="h-px w-8 bg-sindoor sm:w-10" />
+            <span>
+              <span className="hidden sm:inline">Angika · </span>where style meets art
+            </span>
           </p>
 
-          <h1 className="rise mt-6 font-display text-[clamp(3.1rem,7.2vw,6.6rem)] font-normal leading-[0.94] tracking-[-0.02em] text-kajal [animation-delay:80ms]">
+          <h1 className="rise mt-5 font-display text-[clamp(3rem,13.5vw,3.6rem)] font-normal leading-[0.94] tracking-[-0.02em] text-kajal [animation-delay:80ms] sm:mt-6 sm:text-[clamp(3.1rem,7.2vw,6.6rem)]">
             Come, peek
             <br />
             inside the{" "}
@@ -215,20 +219,36 @@ export function Hero() {
             </span>
           </h1>
 
-          <p className="rise mt-4 font-bn-display text-2xl text-kajal-faint [animation-delay:140ms]" lang="bn">
+          <p
+            className="rise mt-3 font-bn-display text-xl text-kajal-faint [animation-delay:140ms] sm:mt-4 sm:text-2xl"
+            lang="bn"
+          >
             আলমারি খুলে দেখো
           </p>
+        </div>
 
-          <p className="rise mt-7 max-w-[31rem] text-[1.05rem] leading-[1.75] text-kajal-soft [animation-delay:200ms]">
+        <div className="relative -mx-2 sm:mx-0 lg:col-start-2 lg:row-span-4 lg:row-start-1">
+          <div className="pointer-events-none absolute -left-2 top-4 z-20 hidden w-44 -rotate-6 lg:block xl:-left-6">
+            <p className="font-hand text-lg leading-snug text-pen">everything inside has a little price tag</p>
+            <HandArrow variant="curl" className="ml-8 mt-1 w-28 rotate-18" />
+          </div>
+          <p className="pointer-events-none absolute right-3 top-1 z-20 -rotate-3 font-hand text-[0.95rem] text-pen sm:hidden">
+            tap a room to open it ↓
+          </p>
+          <Almirah />
+        </div>
+
+        <div className="relative z-10 max-w-152 lg:col-start-1 lg:row-start-3">
+          <p className="rise text-[1rem] leading-[1.7] text-kajal-soft [animation-delay:200ms] sm:max-w-124 sm:text-[1.05rem] sm:leading-[1.75] lg:mt-7">
             Every Bengali home has one: the tall almirah where the good sarees live, folded with neem leaves and
             stories. This is ours: a rail of dresses, shelves of handmade things and a trunk full of kalka, every piece
             handpicked and tagged in rupees. There&rsquo;s no checkout here; just tell us what you love.
           </p>
 
-          <div className="rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:260ms]">
+          <div className="rise mt-7 flex flex-wrap items-center gap-x-3 gap-y-1 [animation-delay:260ms] sm:mt-9">
             <a
               href="#rail"
-              className="group inline-flex items-center gap-3 rounded-full bg-kajal py-3.5 pl-6 pr-4 text-[0.95rem] font-medium text-tant transition-colors hover:bg-sindoor"
+              className="group inline-flex w-full items-center justify-between gap-3 rounded-full bg-kajal py-3.5 pl-6 pr-4 text-[0.95rem] font-medium text-tant transition-colors hover:bg-sindoor sm:w-auto sm:justify-start"
             >
               Open the almirah
               <span className="grid h-7 w-7 place-items-center rounded-full bg-tant/15 transition-transform group-hover:translate-y-0.5">
@@ -239,26 +259,18 @@ export function Hero() {
               href={whatsappLink(`Hi ${site.name}! I just peeked inside the almirah and I'd love to know more.`)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full px-4 py-3.5 text-[0.95rem] text-kajal underline decoration-kajal/20 underline-offset-[6px] transition-colors hover:text-sobuj hover:decoration-sobuj"
+              className="inline-flex items-center gap-2 rounded-full px-1 py-3.5 text-[0.95rem] text-kajal underline decoration-kajal/20 underline-offset-[6px] transition-colors hover:text-sobuj hover:decoration-sobuj sm:px-4"
             >
               <WhatsAppIcon size={18} />
               Say hello on WhatsApp
             </a>
           </div>
 
-          <p className="rise mt-12 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-kajal-soft [animation-delay:320ms]">
+          <p className="rise mt-8 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-sm text-kajal-soft [animation-delay:320ms] sm:mt-12">
             <span className="tabular font-display text-3xl text-kajal">{products.length}</span> pieces ·
             <span className="tabular font-display text-3xl text-kajal">3</span> rooms · from
             <Price value={lowest} className="font-display text-3xl text-kajal" />
           </p>
-        </div>
-
-        <div className="relative">
-          <div className="pointer-events-none absolute -left-2 top-4 z-20 hidden w-44 -rotate-6 lg:block xl:-left-6">
-            <p className="font-hand text-lg leading-snug text-pen">everything inside has a little price tag</p>
-            <HandArrow variant="curl" className="ml-8 mt-1 w-28 rotate-[18deg]" />
-          </div>
-          <Almirah />
         </div>
       </div>
     </section>

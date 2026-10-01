@@ -6,28 +6,21 @@ import { LogoBadge, Paar, Wordmark } from "./brand";
 import { MoonIcon, SunIcon } from "./icons";
 
 const ROOMS = [
-  { href: "#rail", label: "The Rail" },
-  { href: "#shelves", label: "The Shelves" },
-  { href: "#trunk", label: "The Trunk" },
-  { href: "#khata", label: "Lal Khata" },
+  { href: "#rail", label: "The Rail", short: "Rail" },
+  { href: "#shelves", label: "The Shelves", short: "Shelves" },
+  { href: "#trunk", label: "The Trunk", short: "Trunk" },
+  { href: "#khata", label: "Lal Khata", short: "Khata" },
 ];
 
 function useEffectiveTheme() {
   const [theme, setTheme] = useState<"light" | "dark" | null>(null);
   useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const read = () => {
-      const explicit = document.documentElement.dataset.theme;
-      setTheme(explicit === "dark" || explicit === "light" ? explicit : media.matches ? "dark" : "light");
-    };
+    // Light unless the visitor has switched the lights off; the phone's system setting is ignored.
+    const read = () => setTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light");
     read();
-    media.addEventListener("change", read);
     const observer = new MutationObserver(read);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    return () => {
-      media.removeEventListener("change", read);
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, []);
   return theme;
 }
@@ -78,11 +71,11 @@ export function SiteHeader() {
             scrolled ? "border-line bg-tant/92 backdrop-blur-md" : "border-transparent bg-tant/0",
           )}
         >
-          <div className="mx-auto flex h-16 max-w-[84rem] items-center justify-between gap-6 px-4 sm:px-8">
+          <div className="mx-auto flex h-14 max-w-336 items-center justify-between gap-6 px-4 sm:h-16 sm:px-8">
             <a href="#top" className="flex items-center gap-2.5" aria-label="Angika, back to the top">
-              <LogoBadge priority className="h-10 w-10 shadow-[0_2px_6px_rgb(66_20_30/0.35)]" />
+              <LogoBadge priority className="h-9 w-9 shadow-[0_2px_6px_rgb(66_20_30/0.35)] sm:h-10 sm:w-10" />
               <span className="flex flex-col gap-1">
-                <Wordmark label={false} className="h-[1.2rem] text-brand" />
+                <Wordmark label={false} className="h-[1.05rem] text-brand sm:h-[1.2rem]" />
                 <span className="hidden font-sans text-[0.55rem] uppercase tracking-[0.28em] text-kajal-faint sm:block">
                   Where style meets art
                 </span>
@@ -96,7 +89,7 @@ export function SiteHeader() {
                   className="label group relative py-2 text-kajal-soft transition-colors hover:text-sindoor"
                 >
                   {r.label}
-                  <span className="stitch absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 text-sindoor transition-transform duration-500 group-hover:scale-x-100" />
+                  <span className="stitch absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 text-sindoor transition-transform duration-500 group-hover:scale-x-100" />
                 </a>
               ))}
             </nav>
@@ -110,6 +103,23 @@ export function SiteHeader() {
               </a>
             </div>
           </div>
+          {/* On phones and tablets the rooms sit in a strip under the logo. */}
+          <nav
+            aria-label="Rooms"
+            className="no-scrollbar flex justify-between gap-3 overflow-x-auto px-4 sm:justify-start sm:gap-8 sm:px-8 lg:hidden"
+          >
+            {ROOMS.map((r) => (
+              <a
+                key={r.href}
+                href={r.href}
+                className="label shrink-0 whitespace-nowrap pb-2.5 pt-1 text-[0.6rem]! tracking-[0.14em]! text-kajal-soft active:text-sindoor sm:tracking-[0.2em]!"
+              >
+                {/* the smallest phones get the short names so all four fit */}
+                <span className="min-[400px]:hidden">{r.short}</span>
+                <span className="hidden min-[400px]:inline">{r.label}</span>
+              </a>
+            ))}
+          </nav>
         </div>
       </header>
     </>

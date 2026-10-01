@@ -188,7 +188,7 @@ export function Scribble({ className }: { className?: string }) {
 
 /** Running stitch rule. */
 export function Stitch({ className }: { className?: string }) {
-  return <div className={cx("stitch h-[2px] w-full", className)} aria-hidden="true" />;
+  return <div className={cx("stitch h-0.5 w-full", className)} aria-hidden="true" />;
 }
 
 /** The lal paar (red border with zari). */

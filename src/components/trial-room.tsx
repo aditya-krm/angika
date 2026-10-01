@@ -84,7 +84,7 @@ function Visual({ product: base, colour }: { product: Product; colour?: string }
       <ObjectArt product={product} uid={tint} className="h-[70%] w-auto max-w-[86%]" />
     );
   return (
-    <div className="relative flex h-full min-h-[22rem] items-center justify-center bg-tant-3 md:min-h-[36rem]">
+    <div className="relative flex h-full min-h-[19rem] items-center justify-center bg-tant-3 sm:min-h-[22rem] md:min-h-[36rem]">
       {look.photo ? (
         <PhotoOr
           key={look.photo}
@@ -130,7 +130,7 @@ function MeasureSlip({
     <div className="mt-7 shrink-0 overflow-hidden rounded-[3px] bg-[#fffdf6] shadow-[0_6px_16px_-10px_rgb(0_0_0/0.45),inset_0_0_0_1px_rgb(0_0_0/0.06)]">
       <div className="tape h-5" aria-hidden="true" />
       <div className="px-4 pb-4 pt-3 sm:px-5">
-        <div className="flex items-baseline justify-between gap-3">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
           <p className="font-sans text-[0.62rem] font-semibold uppercase tracking-[0.22em] text-[#8a8286]">
             {chart ? "Size & measurements" : "Measurements"}
           </p>
@@ -235,13 +235,17 @@ function Body({ product, onClose }: { product: Product; onClose: () => void }) {
       </button>
 
       <div className="relative md:h-full">
+        <span
+          className="pointer-events-none absolute left-1/2 top-2 z-20 h-1 w-10 -translate-x-1/2 rounded-full bg-black/25 md:hidden"
+          aria-hidden="true"
+        />
         <Visual product={product} colour={picked.colour} />
         <span className="absolute left-4 top-4 rounded-full bg-tant/85 px-2.5 py-0.5 font-hand text-sm text-pen backdrop-blur">
           trial room
         </span>
       </div>
 
-      <div className="flex flex-col px-6 pb-9 pt-8 sm:px-10 md:overflow-y-auto md:pt-12">
+      <div className="flex flex-col px-6 pb-5 pt-7 sm:px-10 md:overflow-y-auto md:pb-9 md:pt-12">
         <p className="label pr-12 text-sindoor">
           {collection.title} · {typeLabels[product.type]}
         </p>
@@ -331,13 +335,14 @@ function Body({ product, onClose }: { product: Product; onClose: () => void }) {
           </dl>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
+        {/* On phones the actions stay pinned to the bottom of the sheet while you scroll. */}
+        <div className="sticky bottom-0 z-10 -mx-6 mt-8 flex items-center gap-2.5 border-t border-line bg-tant/95 px-6 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] pt-3 backdrop-blur-md sm:-mx-10 sm:px-10 md:static md:mx-0 md:flex-wrap md:gap-3 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none">
           <button
             type="button"
             onClick={() => togglePotli(product.id)}
             aria-pressed={on}
             className={cx(
-              "inline-flex flex-1 items-center justify-center gap-2 rounded-full px-6 py-3.5 font-medium transition-colors sm:flex-none",
+              "inline-flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-5 py-3.5 font-medium transition-colors sm:px-6 md:flex-none",
               on ? "bg-kajal text-tant" : "bg-sindoor text-white hover:bg-sindoor-deep",
             )}
           >
@@ -348,10 +353,11 @@ function Body({ product, onClose }: { product: Product; onClose: () => void }) {
             href={whatsappLink(productEnquiry(product, picked))}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full border border-kajal/20 px-5 py-3.5 text-kajal transition-colors hover:border-sobuj hover:text-sobuj"
+            className="inline-flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-kajal/20 px-4 py-3.5 text-kajal transition-colors hover:border-sobuj hover:text-sobuj sm:px-5"
           >
             <WhatsAppIcon size={18} />
-            Ask on WhatsApp
+            <span className="sm:hidden">Ask</span>
+            <span className="hidden sm:inline">Ask on WhatsApp</span>
           </a>
           <button
             type="button"
@@ -365,7 +371,7 @@ function Body({ product, onClose }: { product: Product; onClose: () => void }) {
                 setCopied(url);
               }
             }}
-            className="inline-flex h-12 items-center gap-1.5 px-2 text-sm text-kajal-soft hover:text-kajal"
+            className="hidden h-12 items-center gap-1.5 px-2 text-sm text-kajal-soft hover:text-kajal md:inline-flex"
           >
             {copied === "done" ? <CheckIcon size={16} className="text-sobuj" /> : <CopyIcon size={16} />}
             {copied === "done" ? "Link copied" : "Copy link"}
